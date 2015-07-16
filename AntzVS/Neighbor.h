@@ -20,6 +20,8 @@ namespace Antz {
      uint8_t curNest;
      bool foodFound;
      uint8_t role; // 0 means Worker
+     
+     Neighbor(uint32_t neighbor);
    };
 }
    

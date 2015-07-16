@@ -9,6 +9,7 @@
  */
 
 #include "Guider.h"
+#include "Neighbor.h"
 
 using namespace Antz;
 
@@ -19,6 +20,7 @@ Guider::Guider(uint32_t robotId):
   curNest(0xFF),
   foodTimer(0),
   nestTimer(0),
+  //Neighborhood = {0},
   priority(DEFAULT_PRIORITY) {
 }
 
@@ -88,7 +90,48 @@ bool Guider::receiveSignal() {
                     minNest = nest;
                 if (food > 0 && food < minFood)
                     minFood = food;
+                //added
+                /*
+                Neighbor x = new Neighbor(number);
+                if ( i = 0){
+                    if((Neighborhood[5] != NULL || Neighborhood[5].getID == x.getID)&&
+                       (Neighborhood[1] != NULL || Neighborhood[1].getID == x.getID)){
+                        Neighborhood[0] = x;
+                    }
+                    
+                }
+                else if( i = 5){
+                    if(Neighborhood[0] != NULL || Neighborhood[0].getID == x.getID)&&
+                      (Neighborhood[4] != NULL || Neighborhood[4].getID == x.getID)){
+                          Neighborhood[0] = x;
+                      }
+                }
+                else{
+                    if(Neighborhood[i+1] != NULL || Neighborhood[i+1].getID == x.getID)&&
+                        (Neighborhood[i-1] != NULL || Neighborhood[i-1].getID == x.getID)){
+                            Neighborhood[i] = x;
+                        }
+
+                }
+                
+                int neighborCount = 0;
+                for(int j = 0; j<6; j++){
+                    if(Neighborhood[i] != NULL){
+                        neighborCount++;
+                        
+                    }
+                    
+                }
+                Serial.println("Number Of Neighbors: ");
+                Serial.print(neighborCount);
+
+                
+                
+                ///
+                */
             }
+        
+        
         /*
         Serial.println("Number form sensor: ");
         Serial.print(i);
