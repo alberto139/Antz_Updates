@@ -26,10 +26,12 @@ Guider::Guider(uint32_t robotId):
 /* setup -- setup routine for Guider robot */
 void Guider::setup() {
   
-        for (int i =0; i<6; i++) {
-      Neighborhood[i] = Neighbor();
-}
+        
     AntzRobot::setup();
+    
+    for (int i =0; i<6; i++) {            //Populate the array
+          Neighborhood[i] = Neighbor();
+        }
 }
 
 /* loop -- loop routine for Guider robot */
@@ -75,6 +77,8 @@ void Guider::loop() {
 
 /* receiveSignal -- receive signals from all the receivers */
 bool Guider::receiveSignal() {
+ 
+    
     bool received = false;
     unsigned long cur = millis();	//millis() returns the number of milliseconds since the arduino began to run this program
     if (cur - nestTimer > 10000)
@@ -93,7 +97,11 @@ bool Guider::receiveSignal() {
                     minNest = nest;
                 if (food > 0 && food < minFood)
                     minFood = food;
+                
+               // Neighbor x(number);    
+                //Neighborhood[i] = x;
                 //added
+                ///*
                 
                 Neighbor x(number);
                 
@@ -101,40 +109,44 @@ bool Guider::receiveSignal() {
                 
                 
                 if ( i == 0){
-                    if((Neighborhood[5].id != -1 || Neighborhood[5].id == x.id)&&
-                       (Neighborhood[1].id != -1 || Neighborhood[1].id == x.id)){
+                    if(( Neighborhood[5].id != x.id)&&(Neighborhood[1].id != x.id)){
                         Neighborhood[0] = x;
                     }
                     
                 }
                 else if( i == 5){
-                    if((Neighborhood[0].id != -1 || Neighborhood[0].id == x.id)&&
-                      (Neighborhood[4].id != -1 || Neighborhood[4].id == x.id)){
+                    if(( Neighborhood[0].id != x.id)&&(Neighborhood[4].id != x.id)){
                           Neighborhood[5] = x;
                       }
                 }
                 else{
-                    if((Neighborhood[i+1].id != -1 || Neighborhood[i+1].id == x.id)&&
-                        (Neighborhood[i-1].id != -1 || Neighborhood[i-1].id == x.id)){
+                    if((Neighborhood[i+1].id != x.id)&& (Neighborhood[i-1].id != x.id)){
                             Neighborhood[i] = x;
                         }
 
                 }
-                
+                //*/
+                Serial.println("Neighborhood: ");
                 int neighborCount = 0;
                 for(int j = 0; j<6; j++){
-                    if(Neighborhood[i].id != -1){
+                    if(Neighborhood[j].id != -1){
                         neighborCount++;
                         
                     }
-                    
+                    Serial.print(Neighborhood[j].id);
+                    Serial.print("  ");
                 }
-                Serial.println("Number Of Neighbors: ");
-                Serial.print(neighborCount);
+                
+
+                Serial.print("\n");
+                Serial.print("Number Of Neighbors: ");
+                Serial.println(neighborCount);
+                Serial.print("\n");
 
                 
                 
                 ///
+                //*/
                 
             }
         
@@ -181,7 +193,7 @@ void Guider::sendSignal() {
 	 *		  identifier       curFood  curNest
 	 */
     sender.send(myNumber, 500);
-    
+    /*
     Serial.print("myNumber: ");
     Serial.println(myNumber, BIN);
     Serial.print("ID      : ");
@@ -190,5 +202,6 @@ void Guider::sendSignal() {
     Serial.println(curFood, BIN);
     Serial.print("curNest : ");
     Serial.println(curNest, BIN);
+    */
 
 }

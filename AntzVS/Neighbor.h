@@ -16,7 +16,7 @@ namespace Antz {
    class Neighbor {
      public:
      uint32_t MyNumber;
-     uint8_t id;
+     int id;
      uint8_t curFood;
      uint8_t curNest;
      bool foodFound;
