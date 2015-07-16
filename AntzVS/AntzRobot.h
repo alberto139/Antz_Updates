@@ -19,6 +19,8 @@
 #include "Sender.h"
 #include "TimerThree.h"
 
+#include "Neighbor.h" // added 
+
 #define IDX_FRONT       0
 #define IDX_RFRONT      1
 #define IDX_RREAR       2
@@ -43,9 +45,10 @@ namespace Antz {
         virtual void setup();
         virtual void loop();
         static AntzRobot* createAntzRobot(char* type, uint32_t robotId);
+        Neighbor Neighborhood [6];
 
-    //protected:
-    public:
+    protected:
+    //public:
         AntzRobot(uint32_t robotId);
         static void goForward(uint64_t msecs, bool async = true);
         static void goBackward(uint64_t msecs, bool async = true);

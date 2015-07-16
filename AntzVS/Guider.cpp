@@ -20,12 +20,15 @@ Guider::Guider(uint32_t robotId):
   curNest(0xFF),
   foodTimer(0),
   nestTimer(0),
-  //Neighborhood = {0},
   priority(DEFAULT_PRIORITY) {
 }
 
 /* setup -- setup routine for Guider robot */
 void Guider::setup() {
+  
+        for (int i =0; i<6; i++) {
+      Neighborhood[i] = Neighbor();
+}
     AntzRobot::setup();
 }
 
@@ -91,24 +94,28 @@ bool Guider::receiveSignal() {
                 if (food > 0 && food < minFood)
                     minFood = food;
                 //added
-                /*
-                Neighbor x = new Neighbor(number);
-                if ( i = 0){
-                    if((Neighborhood[5] != NULL || Neighborhood[5].getID == x.getID)&&
-                       (Neighborhood[1] != NULL || Neighborhood[1].getID == x.getID)){
+                
+                Neighbor x(number);
+                
+
+                
+                
+                if ( i == 0){
+                    if((Neighborhood[5].id != -1 || Neighborhood[5].id == x.id)&&
+                       (Neighborhood[1].id != -1 || Neighborhood[1].id == x.id)){
                         Neighborhood[0] = x;
                     }
                     
                 }
-                else if( i = 5){
-                    if(Neighborhood[0] != NULL || Neighborhood[0].getID == x.getID)&&
-                      (Neighborhood[4] != NULL || Neighborhood[4].getID == x.getID)){
-                          Neighborhood[0] = x;
+                else if( i == 5){
+                    if((Neighborhood[0].id != -1 || Neighborhood[0].id == x.id)&&
+                      (Neighborhood[4].id != -1 || Neighborhood[4].id == x.id)){
+                          Neighborhood[5] = x;
                       }
                 }
                 else{
-                    if(Neighborhood[i+1] != NULL || Neighborhood[i+1].getID == x.getID)&&
-                        (Neighborhood[i-1] != NULL || Neighborhood[i-1].getID == x.getID)){
+                    if((Neighborhood[i+1].id != -1 || Neighborhood[i+1].id == x.id)&&
+                        (Neighborhood[i-1].id != -1 || Neighborhood[i-1].id == x.id)){
                             Neighborhood[i] = x;
                         }
 
@@ -116,7 +123,7 @@ bool Guider::receiveSignal() {
                 
                 int neighborCount = 0;
                 for(int j = 0; j<6; j++){
-                    if(Neighborhood[i] != NULL){
+                    if(Neighborhood[i].id != -1){
                         neighborCount++;
                         
                     }
@@ -128,7 +135,7 @@ bool Guider::receiveSignal() {
                 
                 
                 ///
-                */
+                
             }
         
         

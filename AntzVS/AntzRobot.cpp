@@ -16,6 +16,7 @@
 #include "Tester.h"
 #include "BayesWorker.h"
 
+
 using namespace Antz;
 
 uint8_t AntzRobot::avoidCnt = 0;
@@ -34,6 +35,10 @@ Scanner AntzRobot::scanner;
  */
 AntzRobot::AntzRobot(uint32_t robotId) {
     identifier = robotId;
+    
+    for (int i =0; i<6; i++) {
+      Neighborhood[i] = Neighbor();
+    }
 }
 
 

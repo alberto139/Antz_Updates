@@ -9,7 +9,8 @@
 #ifndef __Antz__Neighbor__
 #define __Antz__Neighbor__
 
-#include "AntzRobot.h"
+//#include "AntzRobot.h"
+#include <stdint.h>
 
 namespace Antz {
    class Neighbor {
@@ -21,6 +22,7 @@ namespace Antz {
      bool foodFound;
      uint8_t role; // 0 means Worker
      
+     Neighbor();
      Neighbor(uint32_t neighbor);
    };
 }
