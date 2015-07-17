@@ -22,7 +22,7 @@ namespace Antz {
         virtual ~Guider() {}
         virtual void setup();
         virtual void loop();
-        int counter; //counter for wiping Neighborhood
+        int Wcount; //counter for wiping Neighborhood
         //int neighborCount;
     protected:
         virtual bool receiveSignal();

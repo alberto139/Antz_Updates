@@ -20,6 +20,7 @@ Guider::Guider(uint32_t robotId):
   curNest(0xFF),
   foodTimer(0),
   nestTimer(0),
+  Wcount(0), // added 
   priority(DEFAULT_PRIORITY) {
 }
 
@@ -123,7 +124,17 @@ bool Guider::receiveSignal() {
                 Serial.print("# Neighbors: ");
                 Serial.println(neighborCount);
                 
-                neighborCount = 0;
+                // Wiping the neighborhood and populating with standard Neighbors with id -1
+                if(Wcount > 10){      // 10 might need to be changed
+                  neighborCount = 0;
+                  Wcount = 0;
+                  for (int i; i<6; i++){
+                    Neighborhood[i] = Neighbor();
+                  }
+                  Serial.println("-----------------------------------------");
+                }
+                
+                Wcount++;
         
 
     if (minNest < (uint16_t)0xFF && minNest + 1 <= curNest) {
