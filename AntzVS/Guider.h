@@ -23,7 +23,7 @@ namespace Antz {
         virtual void setup();
         virtual void loop();
         int counter; //counter for wiping Neighborhood
-        int neighborCount;
+        //int neighborCount;
     protected:
         virtual bool receiveSignal();
         virtual void sendSignal();

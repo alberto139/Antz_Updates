@@ -77,22 +77,6 @@ void Guider::loop() {
 
 /* receiveSignal -- receive signals from all the receivers */
 bool Guider::receiveSignal() {
-  
- 
-  if (counter > 10) {
-                Serial.print("\n");
-                Serial.print("Number Of Neighbors: ");
-                Serial.println(neighborCount);
-                Serial.print("\n"); // print counter
-                
-
-    for (int i =0; i<6; i++) {            //Populate the array
-      Neighborhood[i] = Neighbor();
-    }
-    counter = 0;
-  }
-  counter++;
- 
     
     bool received = false;
     unsigned long cur = millis();	//millis() returns the number of milliseconds since the arduino began to run this program
@@ -100,11 +84,13 @@ bool Guider::receiveSignal() {
         curNest = 0xFF;
     if (cur - foodTimer > 10000)
         curFood = 0xFF;
+        
+    int neighborCount = 0;          // total number of neighbors after a read
     
     for (int i = 0; i < 6; ++i) {	// 6 is the number of receiver sensors mounted on the robot
         if (recver.canHearSignal(i)) {
             received = true;
-            uint32_t number; // to store the 32-bit signal
+            uint32_t number; // to store the 32-bit signal 
             if (recver.recvFrom(i, &number)) {
                 uint8_t nest = (uint8_t)(number & 0xFF);
                 uint8_t food = (uint8_t)(number >> 8);
@@ -112,70 +98,34 @@ bool Guider::receiveSignal() {
                     minNest = nest;
                 if (food > 0 && food < minFood)
                     minFood = food;
-                
-               // Neighbor x(number);    
-                //Neighborhood[i] = x;
-                //added
-                ///*
-                
-                Neighbor x(number);
-                
+                  }
+                  
+                  Neighbor currentN(number);
+                  Neighborhood[i] = currentN;
+                  //neighborCount++;
+                  
+          
+                } // end of if (recver.canHearSignal(i))
 
                 
-                
-                if ( i == 0){
-                    if(( Neighborhood[5].id != x.id)&&(Neighborhood[1].id != x.id)){
-                        Neighborhood[0] = x;
-                    }
-                    
+              } // end of for (int i = 0; i < 6; ++i) 
+              
+              //Printf of Neighborhood array
+              Serial.println("Neighborhood array");
+              for (int i; i<6; i++){
+                Serial.print(Neighborhood[i].id);
+                Serial.print("  ");
+                if (Neighborhood[i].id != -1){
+                  neighborCount++;
                 }
-                else if( i == 5){
-                    if(( Neighborhood[0].id != x.id)&&(Neighborhood[4].id != x.id)){
-                          Neighborhood[5] = x;
-                      }
-                }
-                else{
-                    if((Neighborhood[i+1].id != x.id)&& (Neighborhood[i-1].id != x.id)){
-                            Neighborhood[i] = x;
-                        }
-
-                }
-                //*/
-                Serial.println("Neighborhood: ");
-                int neighborCount = 0;
-                for(int j = 0; j<6; j++){
-                    if(Neighborhood[j].id != -1){
-                        neighborCount++;
-                        
-                    }
-                    Serial.print(Neighborhood[j].id);
-                    Serial.print("  ");
-                }
-                
-/*
-                Serial.print("\n");
-                Serial.print("Number Of Neighbors: ");
+              }
+                Serial.println("");
+                Serial.print("# Neighbors: ");
                 Serial.println(neighborCount);
-                Serial.print("\n");
-*/
                 
-                
-                ///
-                //*/
-                
-            }
+                neighborCount = 0;
         
-        
-        /*
-        Serial.println("Number form sensor: ");
-        Serial.print(i);
-        Serial.print("  ");
-        Serial.print(number, BIN);
-        Serial.println();
-        */
-        }
-        
-    }
+
     if (minNest < (uint16_t)0xFF && minNest + 1 <= curNest) {
         curNest = minNest + 1;
         nestTimer = millis();

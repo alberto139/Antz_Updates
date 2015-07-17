@@ -5,7 +5,6 @@
  *		Definitions of various routines for Transition robot.
  *              This Transition happens in between role changes.
  *
- * Copyright: 2015 Ac Alberto Rivera. All rights reserved.
  * Date: 7/17/15
  */
 
