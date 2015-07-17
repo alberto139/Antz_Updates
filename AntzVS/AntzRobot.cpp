@@ -12,6 +12,7 @@
 #include "AntzRobot.h"
 #include "Worker.h"
 #include "Guider.h"
+#include "Transition.h"   //added for role assingment 
 #include "ExpGuider.h"
 #include "Tester.h"
 #include "BayesWorker.h"
@@ -58,6 +59,8 @@ AntzRobot* AntzRobot::createAntzRobot(char* type, uint32_t robotId) {
         return new Tester(robotId);
     else if (strcmp(type, "BayesWorker") == 0)
         return new BayesWorker(robotId);
+    else if (strcmp(type, "Transition") == 0)
+        return new Transition(robotId);
     else
         return NULL;
 }

@@ -13,7 +13,7 @@
 
 using namespace Antz;
 
-/* Guider -- Contructor */
+/* Guider -- Constructor */
 Guider::Guider(uint32_t robotId):
   AntzRobot(robotId),
   curFood(0xFF),
@@ -77,6 +77,21 @@ void Guider::loop() {
 
 /* receiveSignal -- receive signals from all the receivers */
 bool Guider::receiveSignal() {
+  
+ 
+  if (counter > 10) {
+                Serial.print("\n");
+                Serial.print("Number Of Neighbors: ");
+                Serial.println(neighborCount);
+                Serial.print("\n"); // print counter
+                
+
+    for (int i =0; i<6; i++) {            //Populate the array
+      Neighborhood[i] = Neighbor();
+    }
+    counter = 0;
+  }
+  counter++;
  
     
     bool received = false;
@@ -137,12 +152,12 @@ bool Guider::receiveSignal() {
                     Serial.print("  ");
                 }
                 
-
+/*
                 Serial.print("\n");
                 Serial.print("Number Of Neighbors: ");
                 Serial.println(neighborCount);
                 Serial.print("\n");
-
+*/
                 
                 
                 ///
@@ -167,7 +182,6 @@ bool Guider::receiveSignal() {
     }
     if (minFood < (uint16_t)0xFF && minFood + 1 <= curFood) {
         curFood = minFood + 1; 
-        //Serial.println("I'm Here. In Guider::receiveSignal() ");
         foodTimer = millis();
     }
     return received;
@@ -178,13 +192,8 @@ void Guider::sendSignal() {
     uint32_t myNumber = 0;
 
     //Serial.println(myNumber, BIN);		
-    //myNumber |= (curFood << 7);	      // Changed form shifting by 8, to shifting by 7 and then 1. To avoid breaking the ID in mynumber
-    //myNumber = (myNumber << 1);
     myNumber |= (identifier << 16);
-    //myNumber |= ( (uint16_t)curFood << 8);
-    myNumber |= ( curFood << 8);
-    	
-    //Serial.println(myNumber, BIN);		
+    myNumber |= ( curFood << 8);		
     myNumber |= curNest;
 
 	/* message can be visualized as follows:

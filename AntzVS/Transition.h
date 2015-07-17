@@ -1,32 +1,34 @@
 /*
  * Antz
  * Antz Framework
- * Guider.h
- *		Guider is a type of robot which acts as beacon in the process of foraging
+ * Trnasiton.h
  *
- * Copyright: 2015 Ac Zhi Xing. All rights reserved.
+ *
+ * Copyright: 2015 Ac Alberto Rivera. All rights reserved.
  * License: <#license#>
  */
 
-#ifndef __Antz__Guider__
-#define __Antz__Guider__
+#ifndef ____Transition__
+#define ____Transition__
+
+//#include <stdio.h>
 
 #include "AntzRobot.h"
 
 #define DEFAULT_PRIORITY 50
 
 namespace Antz {
-    class Guider: public AntzRobot {
+    class Transition: public AntzRobot {
     public:
-        Guider(uint32_t robotId);
-        virtual ~Guider() {}
+        Transition(uint32_t robotId);
+        virtual ~Transition() {}
         virtual void setup();
         virtual void loop();
-        int counter; //counter for wiping Neighborhood
+        int counter;            // Counter for wiping Neighborhood
         int neighborCount;
     protected:
-        virtual bool receiveSignal();
-        virtual void sendSignal();
+        //virtual bool receiveSignal();
+        //virtual void sendSignal();
         Sender sender;
         uint16_t minFood;
         uint16_t minNest;
@@ -38,4 +40,4 @@ namespace Antz {
     };
 }
 
-#endif /* defined(__Antz__Guider__) */
+#endif /* defined(____Transition__) */
