@@ -6,7 +6,7 @@
  *              This Transition happens in between role changes.
  *
  * Copyright: 2015 Ac Alberto Rivera. All rights reserved.
- * License: <#license#>
+ * Date: 7/17/15
  */
 
 #include "Transition.h"
