@@ -8,6 +8,7 @@
 */
 
 #include "Worker.h"
+#include "Neighbor.h"
 
 using namespace Antz;
 
@@ -22,6 +23,7 @@ signalIndex(6),
 minNumber(0xFFFFFFFF),
 movePhase(0),
 noMoveCnt(0),
+Wcount(0), // added in the constructor //counter for wipe 
 randomMoveTimer(0){
 }
 
@@ -29,10 +31,19 @@ randomMoveTimer(0){
 void Worker::setup() {
     AntzRobot::setup();
     Serial.begin(9600);
+    
+    for (int i =0; i<6; i++) {            //Populate the array in setup
+          Neighborhood[i] = Neighbor();
+        }
+        
+    Serial.println("In Worker setup------------------------------------------------------");
+        
+    
 }
 
 /* loop -- loop routine for Worker robot */
 void Worker::loop() {
+  Serial.println("In Worker loop------------------------------------------------------");
     display.red(false);
     display.green(false);
     if (target == 0) { // i'm going towards nest
@@ -72,6 +83,9 @@ void Worker::loop() {
 
 /* receiveSignal -- receive signals from all the receivers */
 bool Worker::receiveSignal() {
+  
+    int neighborCount = 0;          // total number of neighbors after a read
+    
     if (millis() - numberTimer > 5000) {
         curNumber = 0xFFFFFFFF;
         numberTimer = millis();
@@ -98,12 +112,54 @@ bool Worker::receiveSignal() {
                 beacCount ++;         //increment the number of beacons seen 
                 minNumber = number;
             }
-        }
+        } 
+        
+        Neighbor currentN(number);
+        
+        if(Neighborhood[(i+1)%6].id != currentN.id && Neighborhood[((i+6)-1)%6].id != currentN.id
+               && Neighborhood[i].id == -1){
+                
+                    if(currentN.id < 15){ // debugging for only id's of '0'
+                        Neighborhood[i] = currentN;
+                    }
+                }
     }
+    ///////////////////////////////////////////////////////////////////////////////////
     
-    if(beacCount == 1){
-      //transition();
-    }
+    
+    Serial.println("Neighborhood array");
+              for (int i; i<6; i++){
+                Serial.print(Neighborhood[i].id);
+                Serial.print("  ");
+                if (Neighborhood[i].id != -1){
+                  neighborCount++;
+                }
+              }
+                Serial.println("");
+                Serial.print("# Neighbors: ");
+                Serial.println(neighborCount);
+                //End of Printf of Neighborhood array
+                
+                // Wiping the neighborhood and populating with standard Neighbors with id -1
+                if(Wcount > 10){      // 10 might need to be changed
+                
+                if(neighborCount == 1){
+                  Serial.println("I am going to Transition role");
+                  
+
+                  transition();
+                  
+                }
+
+                  neighborCount = 0;
+                  Wcount = 0;
+                  for (int i; i<6; i++){
+                    Neighborhood[i] = Neighbor();
+                  }
+                  Serial.println("-----------------------------------------");
+                }
+                
+                Wcount++;
     
     return received;
 }

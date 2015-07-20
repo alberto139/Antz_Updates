@@ -20,6 +20,9 @@ namespace Antz {
         virtual ~Worker() {}
         virtual void setup();
         virtual void loop();
+        
+        int Wcount; //counter for wiping Neighborhood
+        
     protected:
         virtual bool receiveSignal();
         virtual void makeMovement();

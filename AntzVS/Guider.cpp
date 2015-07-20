@@ -157,6 +157,7 @@ bool Guider::receiveSignal() {
                 Serial.println("");
                 Serial.print("# Neighbors: ");
                 Serial.println(neighborCount);
+                //End of Printf of Neighborhood array
                 
                 // Wiping the neighborhood and populating with standard Neighbors with id -1
                 if(Wcount > 10){      // 10 might need to be changed
@@ -164,13 +165,8 @@ bool Guider::receiveSignal() {
                 if(neighborCount >= 3){
                   Serial.println("I am going to Transition role");
                   
-                  AntzRobot *antz = AntzRobot::createAntzRobot("Worker", 1);
-                  antz->setup();
-  
-                  while(true){
-                    antz->loop();
-                  }
-                  //transition();
+
+                  transition();
                   
                 }
                 
