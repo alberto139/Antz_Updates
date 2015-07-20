@@ -25,6 +25,7 @@ namespace Antz {
         virtual void makeMovement();
         virtual void randomWalkGo();
         virtual void randomWalkReset();
+        virtual void transition();
 
         uint64_t randomMoveTimer;
         uint8_t target;

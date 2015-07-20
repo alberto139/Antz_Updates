@@ -34,7 +34,8 @@ void Transition::setup() {
 
 /*loop -- loop routine for Transition robot */
 void Transition::loop() {
-    stopMoving();
+    //stopMoving();
+    Serial.println("I am in Transition role");
 }
 
 //void Transition::sendSignal() {}

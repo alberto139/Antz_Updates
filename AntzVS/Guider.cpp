@@ -121,11 +121,11 @@ bool Guider::receiveSignal() {
             
             
             
-                  Neighbor currentN(number);
-            Serial.print("Neighbor id: ");
+            Neighbor currentN(number);
+           /* Serial.print("Neighbor id: ");
             Serial.println(currentN.id);
             Serial.println(number, BIN);
-            Serial.print("\n");
+            Serial.print("\n");*/
             
             if(Neighborhood[(i+1)%6].id != currentN.id && Neighborhood[((i+6)-1)%6].id != currentN.id
                && Neighborhood[i].id == -1){
@@ -160,6 +160,20 @@ bool Guider::receiveSignal() {
                 
                 // Wiping the neighborhood and populating with standard Neighbors with id -1
                 if(Wcount > 10){      // 10 might need to be changed
+                
+                if(neighborCount >= 3){
+                  Serial.println("I am going to Transition role");
+                  
+                  AntzRobot *antz = AntzRobot::createAntzRobot("Worker", 1);
+                  antz->setup();
+  
+                  while(true){
+                    antz->loop();
+                  }
+                  //transition();
+                  
+                }
+                
                   neighborCount = 0;
                   Wcount = 0;
                   for (int i; i<6; i++){
@@ -208,4 +222,13 @@ void Guider::sendSignal() {
     Serial.println(curNest, BIN);
     */
 
+}
+
+void Guider::transition(){
+  AntzRobot *antz = AntzRobot::createAntzRobot("Worker", 1);
+  antz->setup();
+  
+  while(true){
+    antz->loop();
+  }
 }

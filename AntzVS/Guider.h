@@ -27,6 +27,8 @@ namespace Antz {
     protected:
         virtual bool receiveSignal();
         virtual void sendSignal();
+        virtual void transition();
+        
         Sender sender;
         uint16_t minFood;
         uint16_t minNest;

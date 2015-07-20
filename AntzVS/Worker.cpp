@@ -31,7 +31,7 @@ void Worker::setup() {
     Serial.begin(9600);
 }
 
-/* loop -- loop routine for Guider robot */
+/* loop -- loop routine for Worker robot */
 void Worker::loop() {
     display.red(false);
     display.green(false);
@@ -65,6 +65,9 @@ void Worker::loop() {
             randomMoveTimer = millis();
         }
     }
+    
+  // if( == 1 ){
+     
 }
 
 /* receiveSignal -- receive signals from all the receivers */
@@ -75,10 +78,13 @@ bool Worker::receiveSignal() {
     }
     bool received = false;
     int idx[6] = {IDX_FRONT, IDX_LFRONT, IDX_RFRONT, IDX_LREAR, IDX_RREAR, IDX_REAR};
+    int beacCount = 0;
+    
     for (int i = 0; i < 6; ++i) { // poll from 6 receivers
         uint32_t number;
         if (recver.recvFrom(idx[i], &number)) {
             received = true;
+            
             uint8_t cardinality = target == 0 ? number : (number >> 8);
             
             if (cardinality == 1) {
@@ -89,10 +95,16 @@ bool Worker::receiveSignal() {
             else if (cardinality > 0 && cardinality < minSignal) {
                 minSignal = cardinality;
                 signalIndex = idx[i];
+                beacCount ++;         //increment the number of beacons seen 
                 minNumber = number;
             }
         }
     }
+    
+    if(beacCount == 1){
+      //transition();
+    }
+    
     return received;
 }
 
@@ -150,4 +162,13 @@ void Worker::randomWalkGo() {
             break;
     }
     ++movePhase;
+}
+
+void Worker::transition(){
+  AntzRobot *antz = AntzRobot::createAntzRobot("Guider", 1);
+  antz->setup();
+  
+  while(true){
+    antz->loop();
+  }
 }
