@@ -29,6 +29,7 @@ void Guider::setup() {
   
         
     AntzRobot::setup();
+    Serial.begin(9600);
     
     for (int i =0; i<6; i++) {            //Populate the array
           Neighborhood[i] = Neighbor();
@@ -50,11 +51,20 @@ void Guider::loop() {
     display.green(false);
     bool wait = true;		// a flag indicating whether there're more signals to be heard
 	/* keep looping until message is heard */
-    while (wait || minNest == 0xFF && minFood == 0xFF)
-        wait = receiveSignal();
+    
+    //*******commented out to just test neighbor recognition***********
+          while (wait || minNest == 0xFF && minFood == 0xFF)
+              wait = receiveSignal();
+    
+    //************************************************************
+    
+    //receiveSignal();
+   //******************* Above is added code **********************
     
     delay(random(priority) * 10);
     
+    
+    //*******commented out to just test neighbor recognition***********
     if (!recver.canHearSignal()) {
         priority = DEFAULT_PRIORITY;
         display.red(false);
@@ -75,6 +85,13 @@ void Guider::loop() {
     else if (priority >= 5)
         priority -= 5;
 }
+    //************************************************************
+    
+    //sendSignal();
+    //Serial.print("SENT SIGNALS: ");
+    //}
+
+    //******************* Above is added code **********************
 
 /* receiveSignal -- receive signals from all the receivers */
 bool Guider::receiveSignal() {
@@ -100,9 +117,26 @@ bool Guider::receiveSignal() {
                 if (food > 0 && food < minFood)
                     minFood = food;
                   }
-                  
+            
+            
+            
+            
                   Neighbor currentN(number);
-                  Neighborhood[i] = currentN;
+            Serial.print("Neighbor id: ");
+            Serial.println(currentN.id);
+            Serial.println(number, BIN);
+            Serial.print("\n");
+            
+            if(Neighborhood[(i+1)%6].id != currentN.id && Neighborhood[((i+6)-1)%6].id != currentN.id
+               && Neighborhood[i].id == -1){
+                
+                    if(currentN.id < 15){ // debugging for only id's of '0'
+                        Neighborhood[i] = currentN;
+                    }
+                }
+            
+            
+            
                   //neighborCount++;
                   
           
