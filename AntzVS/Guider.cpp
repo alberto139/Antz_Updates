@@ -221,7 +221,7 @@ void Guider::sendSignal() {
 }
 
 void Guider::transition(){
-  AntzRobot *antz = AntzRobot::createAntzRobot("Worker", 1);
+  AntzRobot *antz = AntzRobot::createAntzRobot("Worker", identifier);
   antz->setup();
   
   while(true){

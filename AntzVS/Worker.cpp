@@ -221,7 +221,7 @@ void Worker::randomWalkGo() {
 }
 
 void Worker::transition(){
-  AntzRobot *antz = AntzRobot::createAntzRobot("Guider", 1);
+  AntzRobot *antz = AntzRobot::createAntzRobot("Guider", identifier);
   antz->setup();
   
   while(true){
