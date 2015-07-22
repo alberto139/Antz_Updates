@@ -93,8 +93,35 @@ void Guider::loop() {
 
     //******************* Above is added code **********************
 
+bool Guider::isNeighborInArray(Neighbor& neighbor)
+{
+    for(int j = 0; j < 6; j++)
+        if(Neighborhood[j].id == neighbor.id)
+            return true;
+    return false;
+}
+
+int Guider::countNeighbors()
+{
+  int neighborCount = 0;
+  //Printf of Neighborhood array
+  Serial.println("Neighborhood array");
+  for (int i = 0; i<6; i++){
+    Serial.print(Neighborhood[i].id == -1 ? '_' : (char)(Neighborhood[i].id + 48));
+    Serial.print("  ");
+    if (Neighborhood[i].id != -1)
+      neighborCount++;
+  }
+    Serial.println("");
+    Serial.print("# Neighbors: ");
+    Serial.println(neighborCount);
+    //End of Printf of Neighborhood array
+  return neighborCount;
+}
+
 /* receiveSignal -- receive signals from all the receivers */
-bool Guider::receiveSignal() {
+bool Guider::receiveSignal()
+{
     
     bool received = false;
     unsigned long cur = millis();	//millis() returns the number of milliseconds since the arduino began to run this program
@@ -103,82 +130,69 @@ bool Guider::receiveSignal() {
     if (cur - foodTimer > 10000)
         curFood = 0xFF;
         
-    int neighborCount = 0;          // total number of neighbors after a read
     
-    for (int i = 0; i < 6; ++i) {	// 6 is the number of receiver sensors mounted on the robot
-        if (recver.canHearSignal(i)) {
+    for (int i = 0; i < 6; ++i) 
+    {	// 6 is the number of receiver sensors mounted on the robot
+        if (recver.canHearSignal(i)) 
+        {
             received = true;
             uint32_t number; // to store the 32-bit signal 
-            if (recver.recvFrom(i, &number)) {
+            if (recver.recvFrom(i, &number))
+            {
                 uint8_t nest = (uint8_t)(number & 0xFF);
                 uint8_t food = (uint8_t)(number >> 8);
                 if (nest > 0 && nest < minNest)
                     minNest = nest;
                 if (food > 0 && food < minFood)
                     minFood = food;
-                  }
+            }
             
             
             
             
             Neighbor currentN(number);
+            if(!isNeighborInArray(currentN) && currentN.id < 12)
+                Neighborhood[i] = currentN;
            /* Serial.print("Neighbor id: ");
             Serial.println(currentN.id);
             Serial.println(number, BIN);
             Serial.print("\n");*/
             
-            if(Neighborhood[(i+1)%6].id != currentN.id && Neighborhood[((i+6)-1)%6].id != currentN.id
-               && Neighborhood[i].id == -1){
-                
-                    if(currentN.id < 15){ // debugging for only id's of '0'
-                        Neighborhood[i] = currentN;
-                    }
-                }
             
-            
-            
-                  //neighborCount++;
-                  
-          
-                } // end of if (recver.canHearSignal(i))
-
-                
-              } // end of for (int i = 0; i < 6; ++i) 
               
-              //Printf of Neighborhood array
-              Serial.println("Neighborhood array");
-              for (int i; i<6; i++){
-                Serial.print(Neighborhood[i].id);
-                Serial.print("  ");
-                if (Neighborhood[i].id != -1){
-                  neighborCount++;
-                }
-              }
-                Serial.println("");
-                Serial.print("# Neighbors: ");
-                Serial.println(neighborCount);
-                //End of Printf of Neighborhood array
-                
-                // Wiping the neighborhood and populating with standard Neighbors with id -1
-                if(Wcount > 10){      // 10 might need to be changed
-                
-                if(neighborCount >= 3){
-                  Serial.println("I am going to Transition role");
-                  
+            
+          
+        } // end of if (recver.canHearSignal(i))
 
-                  transition();
-                  
-                }
                 
-                  neighborCount = 0;
-                  Wcount = 0;
-                  for (int i; i<6; i++){
-                    Neighborhood[i] = Neighbor();
-                  }
-                  Serial.println("-----------------------------------------");
-                }
+    } // end of for (int i = 0; i < 6; ++i) 
+              
+              
                 
-                Wcount++;
+    // Wiping the neighborhood and populating with standard Neighbors with id -1
+    if(Wcount > 15)
+    {      // 10 might need to be changed
+        if(countNeighbors() >= 3)
+        {
+            if(!recalculation)
+            {
+                recalculation = true;
+                delay(random(1000));
+            }
+            else
+            {
+                Serial.println("I am going to Transition role");
+                transition();
+            }
+        }
+    
+        Wcount = 0;
+        for (int j = 0; j<6; j++)
+            Neighborhood[j] = Neighbor();
+        Serial.println("-----------------------------------------");
+    }
+    
+    Wcount++;
         
 
     if (minNest < (uint16_t)0xFF && minNest + 1 <= curNest) {

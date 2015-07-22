@@ -29,6 +29,11 @@ namespace Antz {
         virtual void sendSignal();
         virtual void transition();
         
+        int countNeighbors();
+        bool isNeighborInArray(Neighbor& neighbor);
+        
+        bool recalculation;
+        
         Sender sender;
         uint16_t minFood;
         uint16_t minNest;
