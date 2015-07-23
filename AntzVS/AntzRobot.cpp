@@ -305,3 +305,29 @@ void AntzRobot::isr() {
     if (motorStopMillis >= 0 && millis() >= motorStopMillis)
         stopMoving();
 }
+
+bool AntzRobot::isNeighborInArray(Neighbor& neighbor)
+{
+    for(int j = 0; j < 6; j++)
+        if(Neighborhood[j].id == neighbor.id)
+            return true;
+    return false;
+}
+
+int AntzRobot::countNeighbors()
+{
+  int neighborCount = 0;
+  //Printf of Neighborhood array
+  Serial.println("Neighborhood array");
+  for (int i = 0; i<6; i++){
+    Serial.print(Neighborhood[i].id == -1 ? '_' : (char)(Neighborhood[i].id + 48));
+    Serial.print("  ");
+    if (Neighborhood[i].id != -1)
+      neighborCount++;
+  }
+    Serial.println("");
+    Serial.print("# Neighbors: ");
+    Serial.println(neighborCount);
+    //End of Printf of Neighborhood array
+  return neighborCount;
+}

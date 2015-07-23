@@ -93,31 +93,7 @@ void Guider::loop() {
 
     //******************* Above is added code **********************
 
-bool Guider::isNeighborInArray(Neighbor& neighbor)
-{
-    for(int j = 0; j < 6; j++)
-        if(Neighborhood[j].id == neighbor.id)
-            return true;
-    return false;
-}
 
-int Guider::countNeighbors()
-{
-  int neighborCount = 0;
-  //Printf of Neighborhood array
-  Serial.println("Neighborhood array");
-  for (int i = 0; i<6; i++){
-    Serial.print(Neighborhood[i].id == -1 ? '_' : (char)(Neighborhood[i].id + 48));
-    Serial.print("  ");
-    if (Neighborhood[i].id != -1)
-      neighborCount++;
-  }
-    Serial.println("");
-    Serial.print("# Neighbors: ");
-    Serial.println(neighborCount);
-    //End of Printf of Neighborhood array
-  return neighborCount;
-}
 
 /* receiveSignal -- receive signals from all the receivers */
 bool Guider::receiveSignal()
@@ -177,7 +153,9 @@ bool Guider::receiveSignal()
             if(!recalculation)
             {
                 recalculation = true;
+                Serial.println("Recalculating...");
                 delay(random(1000));
+                Wcount = -15;
             }
             else
             {
@@ -185,8 +163,13 @@ bool Guider::receiveSignal()
                 transition();
             }
         }
-    
-        Wcount = 0;
+        else
+        {
+            if(recalculation)
+                recalculation = false;
+            Wcount = 0;
+        }
+        
         for (int j = 0; j<6; j++)
             Neighborhood[j] = Neighbor();
         Serial.println("-----------------------------------------");
