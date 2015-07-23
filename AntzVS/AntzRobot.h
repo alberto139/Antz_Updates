@@ -67,6 +67,9 @@ namespace Antz {
         static uint8_t bayesDecision();
         static void isr();
 
+        int countNeighbors();
+        bool isNeighborInArray(Neighbor& neighbor);
+
         static uint32_t identifier;
         static int64_t motorStartMillis;
         static int64_t motorStopMillis;
