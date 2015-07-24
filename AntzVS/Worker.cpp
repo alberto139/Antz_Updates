@@ -145,8 +145,12 @@ bool Worker::receiveSignal()
 void Worker::makeMovement() {
     switch (signalIndex) {
         case IDX_FRONT:
-            if (avoid() == false)
+            if (!blocked()){
                 goForward(500);
+            }
+            else{
+              evasiveAction();
+            }
             break;
         case IDX_REAR:
             turnLeft(180);
@@ -182,15 +186,19 @@ void Worker::randomWalkGo() {
             break;
         case 2:
             turnRight(60, false);
-            if (!avoid())				// if there is no obstacle
+            if (!blocked())				// if there is no obstacle
                 goForward(500);
+            else 
+               evasiveAction();
             break;
         default:
             turnLeft(60, false);
             int cnt = movePhase;
             while (cnt-- > 0) {
-                if (!avoid())			// if there is no obstacle
+                if (!blocked())			// if there is no obstacle
                     goForward(500);
+                else 
+                  evasiveAction();
             }
             break;
     }

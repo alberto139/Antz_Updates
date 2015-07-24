@@ -202,7 +202,7 @@ bool AntzRobot::avoid() {
 }
 
 
-/*   Added by Eli 7/24/15 (Not Called)
+/*   Added by Eli 7/24/15 (Called instead of avoid)
  *  Trying to split avoid into two sub functions 
  *  1) Detect if there is there is something in front of the robot
  *  2) move accordingly
