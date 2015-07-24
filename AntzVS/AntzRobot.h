@@ -47,6 +47,7 @@ namespace Antz {
         static AntzRobot* createAntzRobot(char* type, uint32_t robotId);
         
         Neighbor Neighborhood [6];    //Array to keep track of Neighbors
+    
 
     protected:
     //public:
@@ -57,10 +58,16 @@ namespace Antz {
         static void turnRight(float degree, bool async = true);
         static void stopMoving();
         static bool avoid();
+
+        bool blocked(); // Added by Eli
+        void evasiveAction(); // Added by Eli
+        bool obstacleSeen = false;
         /*
 		 * The six signal should be: front, right front, right rear
          * rear, left rear, and left front
 		 */
+        
+    
         static void bayesUpdate(bool signals[]);
         static void bayesUpdate();
         static void bayesReset();

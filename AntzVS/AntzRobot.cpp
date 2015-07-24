@@ -16,6 +16,7 @@
 #include "ExpGuider.h"
 #include "Tester.h"
 #include "BayesWorker.h"
+#include "Role.h"
 
 
 using namespace Antz;
@@ -198,6 +199,46 @@ bool AntzRobot::avoid() {
     if (!detected)
         avoidCnt = 0;
     return detected;
+}
+
+
+/*   Added by Eli 7/24/15 (Not Called)
+ *  Trying to split avoid into two sub functions 
+ *  1) Detect if there is there is something in front of the robot
+ *  2) move accordingly
+ */
+bool AntzRobot::blocked() { 
+    bool detected1 = false;
+    bool detected2 = false; // check twice to make sure that something is actually there
+    float angle;
+    bool async = true;
+    if (scanner.scan(&angle) <= 30) 
+      detected1 = true; // the robot saw something the FIRST time
+    if (scanner.scan(&angle) <= 30) 
+      detected1 = true; // the robot saw something the SECOND time
+
+
+      obstacleSeen = detected1 && detected2;
+      return (obstacleSeen); // only returns true if it saw somehting both checks
+}
+
+void AntzRobot::evasiveAction(){ // should be improved 
+  // assumed that this will be called the first time after "blocked" returns true
+  avoidCnt = 0;
+  float angle;
+  bool async = true;
+  uint8_t deg = 20;
+  while(obstacleSeen){
+    avoidCnt++;
+    if (avoidCnt > 5) {     
+       // possible deadlock
+       async = false;
+       deg = 80; // when it turns it should end up 180 degrees from where it started facing
+    }
+    turnLeft(deg, async);
+    obstacleSeen = blocked();
+
+  }
 }
 
 

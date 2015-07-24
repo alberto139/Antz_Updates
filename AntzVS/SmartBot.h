@@ -10,6 +10,7 @@
 #define __Antz__SmartBot__
 
 #include "AntzRobot.h"
+#include "Role.h"
 
 #define DEFAULT_PRIORITY 50
 
@@ -25,6 +26,9 @@ namespace Antz {
         int Wcount; //counter for wiping Neighborhood
         //int neighborCount;
     protected:
+
+   //GuiderRole guider();
+   //WorkerRole worker();
         
         //Guider stuff
         
