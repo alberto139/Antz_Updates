@@ -215,7 +215,7 @@ bool AntzRobot::blocked() {
     if (scanner.scan(&angle) <= 30) 
       detected1 = true; // the robot saw something the FIRST time
     if (scanner.scan(&angle) <= 30) 
-      detected1 = true; // the robot saw something the SECOND time
+      detected2 = true; // the robot saw something the SECOND time
 
 
       obstacleSeen = detected1 && detected2;

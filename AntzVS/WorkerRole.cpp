@@ -4,7 +4,7 @@ using namespace Antz;
 
 WorkerRole::WorkerRole(SmartBot& _robot)
     : Role(_robot), 
-    target(0), 
+    target(TARGET_FOOD), 
     curNumber(0xFFFFFFFF), 
     numberTimer(0), 
     minSignal(0xFF),
@@ -97,7 +97,7 @@ bool WorkerRole::receiveSignal(int& roleDecision)
 
     if (robot.wipingNeighborsTimer == 0)
     {
-        if (robot.countNeighbors() == 1)
+        if (robot.countNeighbors() == 1 && target == TARGET_FOOD)
             roleDecision = SWITCH_ROLE;
 
         robot.wipingNeighborsTimer = NEIGHBORS_COLLECTION_TIME_WORK;

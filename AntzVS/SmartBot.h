@@ -21,7 +21,7 @@ namespace Antz
 {
     class Role;
 
-    class SmartBot: public AntzRobot
+    class SmartBot : public AntzRobot
     {
         friend class Role;
         friend class WorkerRole;
