@@ -11,39 +11,28 @@
 #ifndef __Antz__GuiderRole__
 #define __Antz__GuiderRole__
 
-
-#include "AntzRobot.h"
 #include "Role.h"
+#include "Display.h"
 
 namespace Antz 
 {
-    class GuiderRole: public Role
+    class GuiderRole : public Role
     {
-      public:
-        GuiderRole(uint32_t robotId);
-        virtual ~GuiderRole() {}
-        virtual void setup();
-        virtual void loop();
-        int Wcount; //counter for wiping Neighborhood
+	public:
+        GuiderRole(SmartBot& _robot);
+		~GuiderRole() {}
 
-        protected:
-        //virtual bool receiveSignal(); // Defined in Role.h
+		int getRoleId() { return ROLE_GUIDER; };
+		int makeStep();
 
-       
-        virtual void sendSignal();
-        Sender sender;
+    private:
+		bool receiveSignal(int& roleDecision);
 
+		bool recalculation;
          // Maybe we should change the variable names below
-        uint16_t minFood;
-        uint16_t minNest;
-        uint16_t curFood;
-        uint16_t curNest;
         uint64_t foodTimer;
         uint64_t nestTimer;
         uint8_t priority;
-        virtual void makeMovement();
-        virtual void randomWalkGo();
-        virtual void randomWalkReset();
     
     };
 }

@@ -74,8 +74,8 @@ namespace Antz {
         static uint8_t bayesDecision();
         static void isr();
 
-        int countNeighbors();
-        bool isNeighborInArray(Neighbor& neighbor);
+        virtual int countNeighbors();
+        virtual bool isNeighborInArray(Neighbor& neighbor);
 
         static uint32_t identifier;
         static int64_t motorStartMillis;
@@ -87,6 +87,7 @@ namespace Antz {
         static Motor motor;
         static Receiver recver;
         static Scanner scanner;
+		Sender sender;
     };
 }
 #endif /* defined(__Antz__AntzRobot__) */

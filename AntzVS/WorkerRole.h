@@ -15,21 +15,27 @@
 #include "AntzRobot.h"
 #include "Role.h"
 
+#define TARGET_NEST 0
+#define TARGET_FOOD 1
+
 namespace Antz 
 {
     class WorkerRole: public Role
     {
-      public:
-        WorkerRole(uint32_t robotId);
-        virtual ~WorkerRole() {}
-        virtual void setup();
-        virtual void loop();
+    public:
+		WorkerRole(SmartBot& _robot);
+        ~WorkerRole() {}
+		
+		int getRoleId() { return ROLE_WORKER; };
+		int makeStep();
 
-        protected:
-        //virtual bool receiveSignal(); // Defined in Role.h
-        virtual void makeMovement();
-        virtual void randomWalkGo();
-        virtual void randomWalkReset();
+    protected:
+
+		bool receiveSignal(int& roleDecision);
+
+        void makeMovement();
+        void randomWalkGo();
+        void randomWalkReset();
 
 
         // Maybe we should change the variable names below
@@ -41,16 +47,11 @@ namespace Antz
         uint8_t minSignal;
         uint8_t signalIndex;
         uint32_t minNumber;
-        uint8_t minFood;
-        uint8_t minNest;
-        uint8_t curFood;
-        uint8_t curNest;
+
         uint8_t foodIndex;
         uint8_t nestIndex;
         uint16_t movePhase;
         uint8_t noMoveCnt;
-
-    
     };
 }
 

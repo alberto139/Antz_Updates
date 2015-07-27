@@ -42,6 +42,11 @@ namespace Antz {
         void number(bool on, uint8_t n); // display n if n is in [1, 9], display 0 otherwise
         void number(bool on);
         uint8_t currentNumber();
+
+		void listeningForSignals();
+		void sendingSignal();
+		void goingTowardsNest();
+		void goingTowardsFood();
     private:
         uint8_t curNum;
     };

@@ -31,7 +31,7 @@ namespace Antz {
         
         bool recalculation = false;
         
-        Sender sender;
+        
         uint16_t minFood;
         uint16_t minNest;
         uint16_t curFood;

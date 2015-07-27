@@ -230,3 +230,32 @@ void Display::number(bool on) {
 uint8_t Display::currentNumber() {
     return curNum;
 }
+
+void Display::listeningForSignals()
+{
+	blue(false);
+	yellow(false);
+	red(true);
+	green(false);
+}
+
+void Display::sendingSignal()
+{
+	red(false);	green(true);
+}
+
+void Display::goingTowardsNest()
+{
+	red(false);
+	green(false);
+	blue(false);
+	yellow(true);
+}
+
+void Display::goingTowardsFood()
+{
+	red(false);
+	green(false);
+	blue(true);
+	yellow(false);
+}
