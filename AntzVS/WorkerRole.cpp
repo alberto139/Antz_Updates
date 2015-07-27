@@ -3,176 +3,176 @@
 using namespace Antz;
 
 WorkerRole::WorkerRole(SmartBot& _robot)
-	: Role(_robot), 
-	target(0), 
-	curNumber(0xFFFFFFFF), 
-	numberTimer(0), 
-	minSignal(0xFF),
-	signalIndex(6),
-	minNumber(0xFFFFFFFF),
-	randomMoveTimer(0)
+    : Role(_robot), 
+    target(0), 
+    curNumber(0xFFFFFFFF), 
+    numberTimer(0), 
+    minSignal(0xFF),
+    signalIndex(6),
+    minNumber(0xFFFFFFFF),
+    randomMoveTimer(0)
 {
-	robot.wipingNeighborsTimer = NEIGHBORS_COLLECTION_TIME_WORK;
+    robot.wipingNeighborsTimer = NEIGHBORS_COLLECTION_TIME_WORK;
 }
 
 int WorkerRole::makeStep()
 {
-	Display& display = robot.display;
-	if (target == TARGET_NEST)
-		display.goingTowardsNest(); // yellow LED is turned on when the robot starts walking from food to nest
-	else if (target == TARGET_FOOD)
-		display.goingTowardsFood(); // blue LED is turned on when the robot starts walking from nest to food
+    Display& display = robot.display;
+    if (target == TARGET_NEST)
+        display.goingTowardsNest(); // yellow LED is turned on when the robot starts walking from food to nest
+    else if (target == TARGET_FOOD)
+        display.goingTowardsFood(); // blue LED is turned on when the robot starts walking from nest to food
 
-	minSignal = NO_SIGNAL;
-	signalIndex = 6;
-	minNumber = 0xFFFFFFFF;
-	int roleDecision = NO_SWITCH;
-	//sendSignal(); -- for now workers do not send any signal
-	receiveSignal(roleDecision);
+    minSignal = NO_SIGNAL;
+    signalIndex = 6;
+    minNumber = 0xFFFFFFFF;
+    int roleDecision = NO_SWITCH;
+    //sendSignal(); -- for now workers do not send any signal
+    receiveSignal(roleDecision);
 
-	if (roleDecision == NO_SWITCH)
-	{
-		uint8_t cur = target == TARGET_NEST ? curNumber : (curNumber >> 8);
+    if (roleDecision == NO_SWITCH)
+    {
+        uint8_t cur = target == TARGET_NEST ? curNumber : (curNumber >> 8);
 
-		if (minSignal != NO_SIGNAL && minSignal <= cur)
-		{
-			display.number(true, minSignal);
-			curNumber = minNumber;
-			numberTimer = millis();
-			makeMovement();
-			randomWalkReset();
-			noMoveCnt = 0;
-		}
-		else if (curNumber == 0xFFFFFFFF)
-		{
-			if (millis() - randomMoveTimer > 1000)
-			{
-				randomWalkGo();
-				randomMoveTimer = millis();
-			}
-		}
-	}
+        if (minSignal != NO_SIGNAL && minSignal <= cur)
+        {
+            display.number(true, minSignal);
+            curNumber = minNumber;
+            numberTimer = millis();
+            makeMovement();
+            randomWalkReset();
+            noMoveCnt = 0;
+        }
+        else if (curNumber == 0xFFFFFFFF)
+        {
+            if (millis() - randomMoveTimer > 1000)
+            {
+                randomWalkGo();
+                randomMoveTimer = millis();
+            }
+        }
+    }
 
-	return roleDecision;
+    return roleDecision;
 }
 
 /* receiveSignal -- receive signals from all the receivers */
 bool WorkerRole::receiveSignal(int& roleDecision)
 {
-	if (millis() - numberTimer > 5000)
-	{
-		curNumber = 0xFFFFFFFF;
-		numberTimer = millis();
-	}
-	bool received = false;
-	int idx[6] = { IDX_FRONT, IDX_LFRONT, IDX_RFRONT, IDX_LREAR, IDX_RREAR, IDX_REAR };
+    if (millis() - numberTimer > 5000)
+    {
+        curNumber = 0xFFFFFFFF;
+        numberTimer = millis();
+    }
+    bool received = false;
+    int idx[6] = { IDX_FRONT, IDX_LFRONT, IDX_RFRONT, IDX_LREAR, IDX_RREAR, IDX_REAR };
 
-	for (int i = 0; i < 6; i++) // poll from 6 receivers
-	{
-		uint32_t number;
-		if (robot.recver.recvFrom(idx[i], &number))
-		{
-			received = true;
+    for (int i = 0; i < 6; i++) // poll from 6 receivers
+    {
+        uint32_t number;
+        if (robot.recver.recvFrom(idx[i], &number))
+        {
+            received = true;
 
-			uint8_t cardinality = target == TARGET_NEST ? number : (number >> 8);
+            uint8_t cardinality = target == TARGET_NEST ? number : (number >> 8);
 
-			if (cardinality == 1)
-			{
-				target = 1 - target;
-				received = false;
-				break;
-			}
-			else if (cardinality > 0 && cardinality < minSignal)
-			{
-				minSignal = cardinality;
-				signalIndex = idx[i];
-				minNumber = number;
-			}
-		}
+            if (cardinality == 1)
+            {
+                target = 1 - target;
+                received = false;
+                break;
+            }
+            else if (cardinality > 0 && cardinality < minSignal)
+            {
+                minSignal = cardinality;
+                signalIndex = idx[i];
+                minNumber = number;
+            }
+        }
 
-		Neighbor* currentN = new Neighbor(number);
-		if (!robot.isNeighborInArray(*currentN) && currentN->id < 12)
-			robot.neighbors[i] = currentN;
-	}
+        Neighbor* currentN = new Neighbor(number);
+        if (!robot.isNeighborInArray(*currentN) && currentN->id < 12)
+            robot.neighbors[i] = currentN;
+    }
 
-	if (robot.wipingNeighborsTimer == 0)
-	{
-		if (robot.countNeighbors() == 1)
-			roleDecision = SWITCH_ROLE;
+    if (robot.wipingNeighborsTimer == 0)
+    {
+        if (robot.countNeighbors() == 1)
+            roleDecision = SWITCH_ROLE;
 
-		robot.wipingNeighborsTimer = NEIGHBORS_COLLECTION_TIME_WORK;
-		robot.wipeNeighbors();
-	}
+        robot.wipingNeighborsTimer = NEIGHBORS_COLLECTION_TIME_WORK;
+        robot.wipeNeighbors();
+    }
 
-	robot.wipingNeighborsTimer--;
+    robot.wipingNeighborsTimer--;
 
-	return received;
+    return received;
 }
 
 /* makeMovement -- make a movement based on current signal index */
 void WorkerRole::makeMovement()
 {
-	switch (signalIndex)
-	{
-		case IDX_FRONT:
-			if (!robot.blocked())
-				robot.goForward(500);
-			else
-				robot.evasiveAction();
-			break;
-		case IDX_REAR:
-			robot.turnLeft(180);
-			break;
-		case IDX_LFRONT:
-			robot.turnLeft(60);
-			break;
-		case IDX_LREAR:
-			robot.turnLeft(120);
-			break;
-		case IDX_RFRONT:
-			robot.turnRight(60);
-			break;
-		case IDX_RREAR:
-			robot.turnRight(120);
-			break;
-	}
+    switch (signalIndex)
+    {
+        case IDX_FRONT:
+            if (!robot.blocked())
+                robot.goForward(500);
+            else
+                robot.evasiveAction();
+            break;
+        case IDX_REAR:
+            robot.turnLeft(180);
+            break;
+        case IDX_LFRONT:
+            robot.turnLeft(60);
+            break;
+        case IDX_LREAR:
+            robot.turnLeft(120);
+            break;
+        case IDX_RFRONT:
+            robot.turnRight(60);
+            break;
+        case IDX_RREAR:
+            robot.turnRight(120);
+            break;
+    }
 }
 
 /* randomWalkReset -- reset random walk state */
 void WorkerRole::randomWalkReset()
 {
-	movePhase = 0;
+    movePhase = 0;
 }
 
 /* randomWalkGo -- make one random movement */
 void WorkerRole::randomWalkGo()
 {
-	switch (movePhase)
-	{
-		case 0:
-			robot.turnLeft(30);
-			break;
-		case 1:
-			robot.turnRight(30);
-			break;
-		case 2:
-			robot.turnRight(60, false);
-			if (!robot.blocked())				// if there is no obstacle
-				robot.goForward(500);
-			else
-				robot.evasiveAction();
-			break;
-		default:
-			robot.turnLeft(60, false);
-			int cnt = movePhase;
-			while (cnt-- > 0)
-			{
-				if (!robot.blocked())			// if there is no obstacle
-					robot.goForward(500);
-				else
-					robot.evasiveAction();
-			}
-			break;
-	}
-	movePhase++;
+    switch (movePhase)
+    {
+        case 0:
+            robot.turnLeft(30);
+            break;
+        case 1:
+            robot.turnRight(30);
+            break;
+        case 2:
+            robot.turnRight(60, false);
+            if (!robot.blocked())				// if there is no obstacle
+                robot.goForward(500);
+            else
+                robot.evasiveAction();
+            break;
+        default:
+            robot.turnLeft(60, false);
+            int cnt = movePhase;
+            while (cnt-- > 0)
+            {
+                if (!robot.blocked())			// if there is no obstacle
+                    robot.goForward(500);
+                else
+                    robot.evasiveAction();
+            }
+            break;
+    }
+    movePhase++;
 }

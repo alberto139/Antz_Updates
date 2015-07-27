@@ -182,10 +182,10 @@ bool AntzRobot::avoid() {
     while (scanner.scan(&angle) <= 30) {// scanner.scan returns distance from obstacle and 30 is the tentative distance
         detected = true;
         ++avoidCnt;
-	/*
-	 * without this if condition, the robot's sensor can eternally keep shaking left-right left-right
-	 * to break this deadlock, after shaking five times, the robot makes a movement
-	 */
+    /*
+     * without this if condition, the robot's sensor can eternally keep shaking left-right left-right
+     * to break this deadlock, after shaking five times, the robot makes a movement
+     */
         if (avoidCnt > 5) { 		// possible deadlock
             async = false;
             deg = 90;

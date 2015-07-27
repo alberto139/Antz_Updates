@@ -18,17 +18,17 @@ namespace Antz
 {
     class GuiderRole : public Role
     {
-	public:
+    public:
         GuiderRole(SmartBot& _robot);
-		~GuiderRole() {}
+        ~GuiderRole() {}
 
-		int getRoleId() { return ROLE_GUIDER; };
-		int makeStep();
+        int getRoleId() { return ROLE_GUIDER; };
+        int makeStep();
 
     private:
-		bool receiveSignal(int& roleDecision);
+        bool receiveSignal(int& roleDecision);
 
-		bool recalculation;
+        bool recalculation;
          // Maybe we should change the variable names below
         uint64_t foodTimer;
         uint64_t nestTimer;

@@ -16,18 +16,18 @@ using namespace Antz;
 
 /* SmartBot -- Constructor */
 SmartBot::SmartBot(uint32_t robotId):
-	AntzRobot(robotId),
-	curFood(NO_SIGNAL),
-	curNest(NO_SIGNAL)
+    AntzRobot(robotId),
+    curFood(NO_SIGNAL),
+    curNest(NO_SIGNAL)
 {
-	robotRole = new WorkerRole(*this);
-	wipeNeighbors();
+    robotRole = new WorkerRole(*this);
+    wipeNeighbors();
 }
 
 SmartBot::~SmartBot()
 {
-	wipeNeighbors();
-	delete robotRole;
+    wipeNeighbors();
+    delete robotRole;
 }
 
 /* setup -- setup routine for SmartBot robot */
@@ -40,53 +40,53 @@ void SmartBot::setup()
 /* loop -- loop routine for SmartBot robot */
 void SmartBot::loop()
 {
-	if (robotRole->makeStep() == SWITCH_ROLE)
-		switchRole();
+    if (robotRole->makeStep() == SWITCH_ROLE)
+        switchRole();
 }
 
 void SmartBot::switchRole()
 {
-	int roleId = robotRole->getRoleId();
-	delete robotRole;
-	if (roleId == ROLE_WORKER)
-		robotRole = new GuiderRole(*this);
-	else
-		robotRole = new WorkerRole(*this);
+    int roleId = robotRole->getRoleId();
+    delete robotRole;
+    if (roleId == ROLE_WORKER)
+        robotRole = new GuiderRole(*this);
+    else
+        robotRole = new WorkerRole(*this);
 }
 
 void SmartBot::wipeNeighbors()
 {
-	for (int i = 0; i < 6; i++)
-	{
-		delete neighbors[i];
-		neighbors[i] = NULL;
-	}
+    for (int i = 0; i < 6; i++)
+    {
+        delete neighbors[i];
+        neighbors[i] = NULL;
+    }
 }
 
 int SmartBot::countNeighbors()
 {
-	int neighborCount = 0;
+    int neighborCount = 0;
 
-	//Printf of Neighborhood array
-	Serial.println("Neighborhood array");
-	for (int i = 0; i < 6; i++)
-	{
-		Serial.print(neighbors[i] != NULL ? '_' : (char)(neighbors[i]->id + '0'));
-		Serial.print("  ");
-		if (neighbors[i] != NULL)
-			neighborCount++;
-	}
-	Serial.println("");
-	Serial.print("# Neighbors: ");
-	Serial.println(neighborCount);
-	//End of Printf of Neighborhood array
+    //Printf of Neighborhood array
+    Serial.println("Neighborhood array");
+    for (int i = 0; i < 6; i++)
+    {
+        Serial.print(neighbors[i] != NULL ? '_' : (char)(neighbors[i]->id + '0'));
+        Serial.print("  ");
+        if (neighbors[i] != NULL)
+            neighborCount++;
+    }
+    Serial.println("");
+    Serial.print("# Neighbors: ");
+    Serial.println(neighborCount);
+    //End of Printf of Neighborhood array
 
-	return neighborCount;
+    return neighborCount;
 }
 bool SmartBot::isNeighborInArray(Neighbor& neighbor)
 {
-	for (int i = 0; i < 6; i++)
-		if (neighbors[i] != NULL && neighbors[i]->id == neighbor.id)
-			return true;
-	return false;
+    for (int i = 0; i < 6; i++)
+        if (neighbors[i] != NULL && neighbors[i]->id == neighbor.id)
+            return true;
+    return false;
 }

@@ -12,19 +12,14 @@ using namespace Antz;
  * Neighbor -- constructor 
  *	Initialize all
  */
- Neighbor::Neighbor(){
-   id = -1;
- }
- 
-Neighbor::Neighbor(uint32_t number){
-  //id = 0;
-  ///*
-  id = (number >> 16) & 0xFF;
-  curFood = (number >> 8) & 0xFF;
-  curNest = number & 0xFF;
-  foodFound = (number >> 24) & 1;
-  role = (number >> 25) & 1; 
-  //*/
+Neighbor::Neighbor(uint32_t signal)
+{
+    orgSignal = signal;
+    id = (signal >> 16) & 0xFF;
+    curFood = (signal >> 8) & 0xFF;
+    curNest = signal & 0xFF;
+    foodFound = (signal >> 24) & 1;
+    role = (signal >> 25) & 1;
 }
 
 

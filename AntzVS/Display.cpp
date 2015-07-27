@@ -127,7 +127,7 @@ void Display::number(bool on, uint8_t n) {
                 digitalWrite(MID, LOW);		//  --
                 digitalWrite(BOT, LOW);		//    |
                 digitalWrite(TOPLEFT, HIGH);	//  --
-		digitalWrite(TOPRGHT, LOW);	// | 
+                digitalWrite(TOPRGHT, LOW);	// | 
                 digitalWrite(BOTLEFT, LOW);	//  __
                 digitalWrite(BOTRGHT, HIGH);	//
                 digitalWrite(DOT, HIGH);	//
@@ -152,7 +152,7 @@ void Display::number(bool on, uint8_t n) {
                 digitalWrite(BOTRGHT, LOW);	//
                 digitalWrite(DOT, HIGH);	//
                 break;
-	    case 5:				// display 5
+            case 5:				// display 5
                 digitalWrite(TOP, LOW);		//
                 digitalWrite(MID, LOW);		//  __
                 digitalWrite(BOT, LOW);		// |
@@ -233,29 +233,30 @@ uint8_t Display::currentNumber() {
 
 void Display::listeningForSignals()
 {
-	blue(false);
-	yellow(false);
-	red(true);
-	green(false);
+    blue(false);
+    yellow(false);
+    red(true);
+    green(false);
 }
 
 void Display::sendingSignal()
 {
-	red(false);	green(true);
+    red(false);
+    green(true);
 }
 
 void Display::goingTowardsNest()
 {
-	red(false);
-	green(false);
-	blue(false);
-	yellow(true);
+    red(false);
+    green(false);
+    blue(false);
+    yellow(true);
 }
 
 void Display::goingTowardsFood()
 {
-	red(false);
-	green(false);
-	blue(true);
-	yellow(false);
+    red(false);
+    green(false);
+    blue(true);
+    yellow(false);
 }

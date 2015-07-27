@@ -19,30 +19,30 @@
 
 namespace Antz
 {
-	class Role;
+    class Role;
 
     class SmartBot: public AntzRobot
-	{
-		friend class Role;
-		friend class WorkerRole;
-		friend class GuiderRole;
+    {
+        friend class Role;
+        friend class WorkerRole;
+        friend class GuiderRole;
 
     public:
         SmartBot(uint32_t robotId);
-		~SmartBot();
+        ~SmartBot();
 
         void setup();
         void loop();
-		void switchRole();
+        void switchRole();
 
     private:
-		void wipeNeighbors();
-		int countNeighbors();
-		bool isNeighborInArray(Neighbor& neighbor);
+        void wipeNeighbors();
+        int countNeighbors();
+        bool isNeighborInArray(Neighbor& neighbor);
 
-		Role* robotRole;
-		Neighbor* neighbors[6];
-		int wipingNeighborsTimer; // timer for wiping neighbors array
+        Role* robotRole;
+        Neighbor* neighbors[6];
+        int wipingNeighborsTimer; // timer for wiping neighbors array
         
         Sender sender;
         uint16_t minFood;

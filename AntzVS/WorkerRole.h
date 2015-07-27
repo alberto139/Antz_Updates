@@ -20,18 +20,18 @@
 
 namespace Antz 
 {
-    class WorkerRole: public Role
+    class WorkerRole : public Role
     {
     public:
-		WorkerRole(SmartBot& _robot);
+        WorkerRole(SmartBot& _robot);
         ~WorkerRole() {}
-		
-		int getRoleId() { return ROLE_WORKER; };
-		int makeStep();
+
+        int getRoleId() { return ROLE_WORKER; };
+        int makeStep();
 
     protected:
 
-		bool receiveSignal(int& roleDecision);
+        bool receiveSignal(int& roleDecision);
 
         void makeMovement();
         void randomWalkGo();
@@ -39,7 +39,7 @@ namespace Antz
 
 
         // Maybe we should change the variable names below
-        
+
         uint64_t randomMoveTimer;
         uint8_t target;
         uint32_t curNumber;

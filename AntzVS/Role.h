@@ -21,20 +21,20 @@
 
 namespace Antz
 {
-	class Role
-	{
-	public:
-		Role(SmartBot& _robot) : robot(_robot) {}
-		virtual ~Role() {}
-		virtual int getRoleId() = 0;
-		virtual int makeStep() = 0;
+    class Role
+    {
+    public:
+        Role(SmartBot& _robot) : robot(_robot) {}
+        virtual ~Role() {}
+        virtual int getRoleId() = 0;
+        virtual int makeStep() = 0;
 
-	protected:
-		virtual bool receiveSignal(int& roleDecision) = 0;
-		void sendSignal();
+    protected:
+        virtual bool receiveSignal(int& roleDecision) = 0;
+        void sendSignal();
 
-		SmartBot& robot;
-	};
+        SmartBot& robot;
+    };
 
 }
 
