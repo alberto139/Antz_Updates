@@ -31,10 +31,10 @@ void Dll::intiIter(){
   
 }
 
-Neighbor* Dll::getNext(){
- Neighbor* neighbor = iter->item;
+DllElem* Dll::getNext(){
+ DllElem* temp = iter;
  iter = iter->next;
- return neighbor;
+ return temp;
   
 }
 
@@ -189,3 +189,4 @@ Neighbor* Dll::Remove(int index){
 
   }
 }
+

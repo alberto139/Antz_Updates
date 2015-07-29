@@ -30,7 +30,7 @@ namespace Antz
         void Insert(int index, Neighbor& itm);
         Neighbor* Remove(int index);
         void intiIter();
-        Neighbor* getNext();
+        DllElem* getNext();
     private:
         int size;
         DllElem *head;

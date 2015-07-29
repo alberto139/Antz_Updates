@@ -132,9 +132,11 @@ bool Guider::receiveSignal()
     //check to see if neighbor is in linkedlist already
             list->intiIter();
             bool added = false;
-            Neighbor* tempN = list->getNext();
+            Neighbor* tempN = list->getNext()->item;
             Serial.print("ID:");
             Serial.println(currentN->id);
+            Serial.print("SEnsor:");
+            Serial.println(i);
             Serial.print("Whole number:");
             Serial.println(currentN->orgSignal, BIN);
             while(tempN != NULL){
@@ -143,10 +145,13 @@ bool Guider::receiveSignal()
                 added = true;
                 break;
               }
-               tempN = list->getNext(); 
+               tempN = list->getNext()->item; 
             }
             if(added){
+              Serial.println("Add to Linked List!!!!!!");
               tempN->recievedFrom[i]++;
+              added = false;
+              delete currentN;
             }
             else{
               currentN->recievedFrom[i]++;
@@ -164,25 +169,47 @@ bool Guider::receiveSignal()
 
                 
     } // end of for (int i = 0; i < 6; ++i) 
- 
+
+    list->intiIter();
+    DllElem* temp = list->getNext();
+    while(temp != NULL){
+      Serial.print("element ");
+      Serial.println(temp->item->id);
+      Serial.println(" ---Sensor Count ----");
+      for(int i = 0; i<6;i++){
+        Serial.print(temp->item->recievedFrom[i]);
+      }
+      temp = list->getNext();
+      }
+    
     // Wiping the neighborhood and populating with standard Neighbors with id -1
     if(Wcount > 15)
     {      // 10 might need to be changed
-      
+      Serial.println("Collecting information...");
   // All the information is recieved and stored
   // Now sort and add to Neighborhood  
   for(int i = 0; i<6;i++){
     list->intiIter();
-    Neighbor* iter;
-    Neighbor* curMax = list->getNext();
+    DllElem* iter;
+    DllElem* curMax = list->getNext();
     iter = curMax;
     while(iter != NULL){
       iter = list->getNext();
-      if(curMax->recievedFrom[i] < iter->recievedFrom[i])
+      if(curMax->item->recievedFrom[i] < iter->item->recievedFrom[i])
         curMax = iter;
+      Serial.print("loop");
     }
-
-    Neighborhood[i] = curMax;
+    Serial.print("curMax Id: ");
+    Serial.println(curMax->item->id);
+    Serial.print("Sensor #: ");
+    Serial.println(i);
+    if(curMax->item->recievedFrom[i] > 0)
+    {
+      Neighborhood[i] = curMax->item;
+      //curMax->prev->next = curMax->next;
+      //curMax->next->prev = curMax->prev;
+    }
+    
   }
     
         if(countNeighbors() >= 3)
@@ -197,7 +224,7 @@ bool Guider::receiveSignal()
             else
             {
                 Serial.println("I am going to Transition role");
-                transition();
+                //transition();
             }
         }
         else
@@ -210,6 +237,8 @@ bool Guider::receiveSignal()
         for (int j = 0; j<6; j++)
             Neighborhood[j] = NULL;
         Serial.println("-----------------------------------------");
+        delete list;
+        list = new Dll();
     }
     
     Wcount++;
