@@ -46,8 +46,9 @@ AntzRobot::AntzRobot(uint32_t robotId) {
     identifier = robotId;
     
     for (int i =0; i<6; i++) {
-      Neighborhood[i] = Neighbor();
+      Neighborhood[i] = NULL;
     }
+    list = new Dll();
     
 }
 
@@ -357,7 +358,7 @@ void AntzRobot::isr() {
 bool AntzRobot::isNeighborInArray(Neighbor& neighbor)
 {
     for(int j = 0; j < 6; j++)
-        if(Neighborhood[j].id == neighbor.id)
+        if(Neighborhood[j]->id == neighbor.id)
             return true;
     return false;
 }
@@ -368,9 +369,9 @@ int AntzRobot::countNeighbors()
   //Printf of Neighborhood array
   Serial.println("Neighborhood array");
   for (int i = 0; i<6; i++){
-    Serial.print(Neighborhood[i].id == -1 ? '_' : (char)(Neighborhood[i].id + 48));
+    Serial.print(Neighborhood[i] == NULL ? '_' : (char)(Neighborhood[i]->id + 48));
     Serial.print("  ");
-    if (Neighborhood[i].id != -1)
+    if (Neighborhood[i]!= NULL)
       neighborCount++;
   }
     Serial.println("");

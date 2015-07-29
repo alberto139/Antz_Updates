@@ -7,14 +7,16 @@ DllElem::DllElem(Neighbor& itemPtr)
   item = &itemPtr;
   prev = NULL;
   next = NULL;
+  
 
 }
 
 
 Dll::Dll()
 {
-  head = tail = NULL;
+  head = tail = iter =  NULL;
   size = 0;
+  
 
 }
 
@@ -22,6 +24,18 @@ Dll::~Dll(){
   while(PopFront() !=NULL)
     ;
 
+}
+
+void Dll::intiIter(){
+ iter = head;
+  
+}
+
+Neighbor* Dll::getNext(){
+ Neighbor* neighbor = iter->item;
+ iter = iter->next;
+ return neighbor;
+  
 }
 
 void Dll::PushFront(Neighbor& item){

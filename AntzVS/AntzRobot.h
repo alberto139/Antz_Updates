@@ -18,6 +18,7 @@
 #include "Scanner.h"
 #include "Sender.h"
 #include "TimerThree.h"
+#include "dll.h"
 
 
 #include "Neighbor.h" // added 
@@ -57,7 +58,8 @@ namespace Antz {
         virtual void loop();
         static AntzRobot* createAntzRobot(char* type, uint32_t robotId);
         
-        Neighbor Neighborhood [6];    //Array to keep track of Neighbors
+        Neighbor* Neighborhood [6];    //Array to keep track of Neighbors
+        Dll *list;
 
     protected:
     //public:

@@ -33,7 +33,7 @@ void Worker::setup() {
     Serial.begin(9600);
     
     for (int i =0; i<6; i++) {            //Populate the array in setup
-          Neighborhood[i] = Neighbor();
+          Neighborhood[i] = NULL;
         }
         
     Serial.println("In Worker setup------------------------------------------------------");
@@ -118,7 +118,7 @@ bool Worker::receiveSignal()
         
         Neighbor currentN(number);
             if(!isNeighborInArray(currentN) && currentN.id < 12)
-                Neighborhood[i] = currentN;
+                Neighborhood[i] = &currentN;
     }
     ///////////////////////////////////////////////////////////////////////////////////
     
@@ -132,7 +132,7 @@ bool Worker::receiveSignal()
     
         Wcount = 0;
         for (int j = 0; j<6; j++)
-            Neighborhood[j] = Neighbor();
+            Neighborhood[j] = NULL;
         Serial.println("-----------------------------------------");
     }
     

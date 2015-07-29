@@ -13,10 +13,12 @@ namespace Antz
         Neighbor* item;
         DllElem *next;
         DllElem *prev;
+        
     };
 
     class Dll {
     public:
+        DllElem *iter;
         Dll();
         ~Dll();
         void PushFront(Neighbor& itm);
@@ -27,6 +29,8 @@ namespace Antz
         int GetSize();
         void Insert(int index, Neighbor& itm);
         Neighbor* Remove(int index);
+        void intiIter();
+        Neighbor* getNext();
     private:
         int size;
         DllElem *head;

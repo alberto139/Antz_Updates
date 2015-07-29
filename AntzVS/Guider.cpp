@@ -32,7 +32,7 @@ void Guider::setup() {
     Serial.begin(9600);
     
     for (int i =0; i<6; i++) {            //Populate the array
-          Neighborhood[i] = Neighbor();
+          Neighborhood[i] = NULL;
         }
 }
 
@@ -128,36 +128,57 @@ bool Guider::receiveSignal()
             
             
             Neighbor currentN(number);
+    //check to see if neighbor is in linkedlist already
+            list->intiIter();
+            bool added = false;
+            Neighbor* tempN = list->getNext();
+            while(tempN != NULL){
+              if(tempN->id == currentN.id){
+                added = true;
+                break;
+              }
+               tempN = list->getNext(); 
+            }
+            if(added){
+              tempN->recievedFrom[i]++;
+            }
+            else{
+              currentN.recievedFrom[i]++;
+              list->PushFront(currentN);
+            }
 
-            //check to see if neighbor is in linkedlist already
-            //if (yes)
-              // iterate through to find it then increment the respective recievedFrom neighbor array
-            //else
-            currentN.recievedFrom[i]++;
-            //add to the linked list
+     
+            
+//            if(!isNeighborInArray(currentN) && currentN.id < 12)
+//                Neighborhood[i] = currentN;
+//           
+            
 
-            
-            if(!isNeighborInArray(currentN) && currentN.id < 12)
-                Neighborhood[i] = currentN;
-           /* Serial.print("Neighbor id: ");
-            Serial.println(currentN.id);
-            Serial.println(number, BIN);
-            Serial.print("\n");*/
-            
-            
-              
-            
-          
         } // end of if (recver.canHearSignal(i))
 
                 
     } // end of for (int i = 0; i < 6; ++i) 
-              
-              
-                
+ 
     // Wiping the neighborhood and populating with standard Neighbors with id -1
     if(Wcount > 15)
     {      // 10 might need to be changed
+      
+  // All the information is recieved and stored
+  // Now sort and add to Neighborhood  
+  for(int i = 0; i<6;i++){
+    list->intiIter();
+    Neighbor* iter;
+    Neighbor* curMax = list->getNext();
+    iter = curMax;
+    while(iter != NULL){
+      iter = list->getNext();
+      if(curMax->recievedFrom[i] < iter->recievedFrom[i])
+        curMax = iter;
+    }
+
+    Neighborhood[i] = curMax;
+  }
+    
         if(countNeighbors() >= 3)
         {
             if(!recalculation)
@@ -181,7 +202,7 @@ bool Guider::receiveSignal()
         }
         
         for (int j = 0; j<6; j++)
-            Neighborhood[j] = Neighbor();
+            Neighborhood[j] = NULL;
         Serial.println("-----------------------------------------");
     }
     
