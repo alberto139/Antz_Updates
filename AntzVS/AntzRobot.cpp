@@ -39,6 +39,7 @@ Scanner AntzRobot::scanner;
   struct Node {
       Neighbor x;
       Node *next;
+
   };
   
 AntzRobot::AntzRobot(uint32_t robotId) {
@@ -47,10 +48,8 @@ AntzRobot::AntzRobot(uint32_t robotId) {
     for (int i =0; i<6; i++) {
       Neighborhood[i] = Neighbor();
     }
-
     
 }
-
 
 /*
  * createAntzRobot -- Object factory
@@ -381,15 +380,4 @@ int AntzRobot::countNeighbors()
   return neighborCount;
 }
 
-//void initNode(struct Node *head, Neighbor n){
-//  head->x = n;
-//  head->next = NULL;
-//}
-//
-//void addNode(struct Node *head, Neighbor n){
-//  struct Node *NewNode = new Node;
-//  NewNode-> x = n;
-//  NewNode -> next = head;
-//  head = NewNode;
-//}
 

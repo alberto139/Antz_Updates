@@ -126,7 +126,17 @@ bool Guider::receiveSignal()
             
             
             
+            
             Neighbor currentN(number);
+
+            //check to see if neighbor is in linkedlist already
+            //if (yes)
+              // iterate through to find it then increment the respective recievedFrom neighbor array
+            //else
+            currentN.recievedFrom[i]++;
+            //add to the linked list
+
+            
             if(!isNeighborInArray(currentN) && currentN.id < 12)
                 Neighborhood[i] = currentN;
            /* Serial.print("Neighbor id: ");
