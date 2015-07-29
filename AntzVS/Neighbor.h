@@ -26,6 +26,7 @@ namespace Antz
         uint8_t curNest;
         bool foodFound;
         uint8_t role;
+        int recievedFrom[6];
    };
 }
    

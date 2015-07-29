@@ -20,6 +20,9 @@ Neighbor::Neighbor(uint32_t signal)
     curNest = signal & 0xFF;
     foodFound = (signal >> 24) & 1;
     role = (signal >> 25) & 1;
+    for (int i =0;i<6;i++){
+      recievedFrom[i] = 0;
+    }
 }
 
 

@@ -19,6 +19,7 @@
 #include "Sender.h"
 #include "TimerThree.h"
 
+
 #include "Neighbor.h" // added 
 
 #define IDX_FRONT       0
@@ -39,6 +40,13 @@ namespace Antz {
     class AntzRobot {
 
     public:
+    
+      struct Node ;
+      
+
+      void initNode(struct Node *head, Neighbor n);
+      void addNode(struct Node *head, Neighbor n);
+      
 	/* Types of movements a robot can perform */
         enum MoveType {mt_forward, mt_backward, mt_left, mt_right, mt_stop, mt_unknown};
         virtual ~AntzRobot() {}
@@ -47,7 +55,7 @@ namespace Antz {
         static AntzRobot* createAntzRobot(char* type, uint32_t robotId);
         
         Neighbor Neighborhood [6];    //Array to keep track of Neighbors
-    
+        
 
     protected:
     //public:
