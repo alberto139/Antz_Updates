@@ -98,7 +98,7 @@ void Guider::loop() {
 /* receiveSignal -- receive signals from all the receivers */
 bool Guider::receiveSignal()
 {
-    
+    Serial.println("Start Recieve");
     bool received = false;
     unsigned long cur = millis();	//millis() returns the number of milliseconds since the arduino began to run this program
     if (cur - nestTimer > 10000)
@@ -127,13 +127,19 @@ bool Guider::receiveSignal()
             
             
             
-            Neighbor currentN(number);
+            Neighbor* currentN = new Neighbor(number);
+            Serial.println("Start NEW code");
     //check to see if neighbor is in linkedlist already
             list->intiIter();
             bool added = false;
             Neighbor* tempN = list->getNext();
+            Serial.print("ID:");
+            Serial.println(currentN->id);
+            Serial.print("Whole number:");
+            Serial.println(currentN->orgSignal, BIN);
             while(tempN != NULL){
-              if(tempN->id == currentN.id){
+              if(tempN->id == currentN->id){
+                Serial.println("Add to Linked List");
                 added = true;
                 break;
               }
@@ -143,8 +149,8 @@ bool Guider::receiveSignal()
               tempN->recievedFrom[i]++;
             }
             else{
-              currentN.recievedFrom[i]++;
-              list->PushFront(currentN);
+              currentN->recievedFrom[i]++;
+              list->PushFront(*currentN);
             }
 
      
