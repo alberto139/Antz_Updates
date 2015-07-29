@@ -1,8 +1,10 @@
 #include "dll.h"
 
-DllElem::DllElem(void *itemPtr)
+using namespace Antz;
+
+DllElem::DllElem(Neighbor& itemPtr)
 {
-  item = itemPtr;
+  item = &itemPtr;
   prev = NULL;
   next = NULL;
 
@@ -22,7 +24,7 @@ Dll::~Dll(){
 
 }
 
-void Dll::PushFront(void *item){
+void Dll::PushFront(Neighbor& item){
   if(IsEmpty())
     {
       DllElem *temp = new DllElem(item);
@@ -42,7 +44,7 @@ void Dll::PushFront(void *item){
 
 
 
-void Dll::PushBack(void *item){
+void Dll::PushBack(Neighbor& item){
   if(IsEmpty())
     {
       DllElem *temp = new DllElem(item);
@@ -60,12 +62,12 @@ void Dll::PushBack(void *item){
 
 }
 
-void *Dll::PopFront(){
+Neighbor* Dll::PopFront(){
 
   if(size == 0)
     return NULL;
   else if(size == 1){
-    void *ret = head->item;
+    Neighbor* ret = head->item;
     delete head;
     head = tail = NULL;
     size--;
@@ -76,19 +78,19 @@ void *Dll::PopFront(){
     head = head->next;
     head->prev = NULL;
     size--;
-    void *ret = temp->item;
+    Neighbor* ret = temp->item;
     delete temp;
     return ret;
     
   }
 
 }
-void *Dll::PopBack(){
+Neighbor* Dll::PopBack(){
 
   if(size == 0)
     return NULL;
   else if(size == 1){
-    void *ret = head->item;
+    Neighbor* ret = head->item;
     delete head;
     head = tail = NULL;
     size--;
@@ -99,7 +101,7 @@ void *Dll::PopBack(){
     tail = tail->prev;
     tail->next = NULL;
     size--;
-    void *ret = temp->item;
+    Neighbor* ret = temp->item;
     delete temp;
     return ret;
 
@@ -117,7 +119,7 @@ int Dll::GetSize(){
 }
 
 
-void Dll::Insert(int index, void *item){
+void Dll::Insert(int index, Neighbor& item){
   if(index+1 > size)
     ;
   else{
@@ -140,17 +142,17 @@ void Dll::Insert(int index, void *item){
 
 }
 
-void *Dll::Remove(int index){
+Neighbor* Dll::Remove(int index){
   if(index >= size)
     return NULL;
   else if(index == 0){
-    void *ret = head->item;
+    Neighbor* ret = head->item;
     head = head->next;
     size--;
     return ret;
   }
   else if(index == (size - 1)){
-    void *ret = tail->item;
+    Neighbor* ret = tail->item;
     tail = tail->prev;
     size--;
     return ret;
@@ -167,7 +169,7 @@ void *Dll::Remove(int index){
     sentinal->prev->next = sentinal->next;
     sentinal->next->prev = sentinal->prev;
     size--;
-    void *ret = sentinal->item;
+    Neighbor* ret = sentinal->item;
     delete sentinal;
     return ret;
 

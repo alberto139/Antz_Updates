@@ -58,7 +58,6 @@ namespace Antz {
         static AntzRobot* createAntzRobot(char* type, uint32_t robotId);
         
         Neighbor Neighborhood [6];    //Array to keep track of Neighbors
-        Node head = NULL;
 
     protected:
     //public:
