@@ -170,21 +170,32 @@ bool Guider::receiveSignal()
                 
     } // end of for (int i = 0; i < 6; ++i) 
 
-    list->intiIter();
+    
+    
+    // Wiping the neighborhood and populating with standard Neighbors with id -1
+    if(Wcount > 15)
+    {      // 10 might need to be changed
+
+
+  list->intiIter();
+  Serial.println("LENTGHT IS ");
+  Serial.print(list->GetSize());
     DllElem* temp = list->getNext();
     while(temp != NULL){
-      Serial.print("element ");
+      Serial.print("temp ID ");
       Serial.println(temp->item->id);
       Serial.println(" ---Sensor Count ----");
       for(int i = 0; i<6;i++){
         Serial.print(temp->item->recievedFrom[i]);
       }
+      Serial.println("");
       temp = list->getNext();
       }
-    
-    // Wiping the neighborhood and populating with standard Neighbors with id -1
-    if(Wcount > 15)
-    {      // 10 might need to be changed
+  
+
+
+
+      
       Serial.println("Collecting information...");
   // All the information is recieved and stored
   // Now sort and add to Neighborhood  
@@ -195,11 +206,17 @@ bool Guider::receiveSignal()
     iter = curMax;
     while(iter != NULL){
       iter = list->getNext();
+      Serial.print("\niter -> ID: ");
+      Serial.println(iter->item->id);
+      Serial.print("iter -> val: ");
+      Serial.println(iter->item->recievedFrom[i]);
+      Serial.print("Sensor #: ");
+      Serial.println(i);
       if(curMax->item->recievedFrom[i] < iter->item->recievedFrom[i])
         curMax = iter;
       Serial.print("loop");
     }
-    Serial.print("curMax Id: ");
+    Serial.print("\ncurMax Id: ");
     Serial.println(curMax->item->id);
     Serial.print("Sensor #: ");
     Serial.println(i);
