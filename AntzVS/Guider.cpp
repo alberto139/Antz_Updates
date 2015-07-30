@@ -143,13 +143,13 @@ bool Guider::receiveSignal()
             Neighbor* tempN;;
             while(!added && iter->hasNext())
             {
+                tempN = iter->getNext();
                 if(tempN->id == currentN->id)
                 {
                     Serial.println("Add to Linked List");
                     added = true;
                 }
-                else
-                    tempN = iter->getNext();
+                    
             }
             if(added)
             {
@@ -175,7 +175,13 @@ bool Guider::receiveSignal()
                 
     } // end of for (int i = 0; i < 6; ++i) 
 
-    DllIter* iter = list->createIterator();
+    
+
+    // Wiping the neighborhood and populating with standard Neighbors with id -1
+    if(Wcount > 15)
+    {      // 10 might need to be changed
+
+      DllIter* iter = list->createIterator();
     while(iter->hasNext())
     {
         Neighbor* temp = iter->getNext();
@@ -187,10 +193,6 @@ bool Guider::receiveSignal()
         temp = iter->getNext();
     }
     delete iter;
-
-    // Wiping the neighborhood and populating with standard Neighbors with id -1
-    if(Wcount > 15)
-    {      // 10 might need to be changed
         Serial.println("Collecting information...");
         // All the information is recieved and stored
         // Now sort and add to Neighborhood  
@@ -203,6 +205,11 @@ bool Guider::receiveSignal()
                 Neighbor* next = iter->getNext();
                 if(curMax->recievedFrom[i] < next->recievedFrom[i])
                     curMax = next;
+                    Serial.print("\niter -> ID: ");
+              Serial.println(next->id);
+              Serial.print("iter -> val: ");
+              Serial.println(next->recievedFrom[i]);
+              Serial.print("Sensor #: ");
                 Serial.print("loop");
             }
             Serial.print("curMax Id: ");
