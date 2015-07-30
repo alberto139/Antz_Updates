@@ -216,7 +216,7 @@ bool Guider::receiveSignal()
             Serial.println(curMax->id);
             Serial.print("Sensor #: ");
             Serial.println(i);
-            if(curMax != NULL && curMax->receivedFrom[i] > 0)
+            if(curMax != NULL && curMax->receivedFrom[i] > 0 && curMax->id != 12)
             {
                 Neighborhood[i] = curMax;
                 Serial.print("Is neighbor removed correctly? : ");

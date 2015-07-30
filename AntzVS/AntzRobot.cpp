@@ -68,8 +68,8 @@ AntzRobot* AntzRobot::createAntzRobot(char* type, uint32_t robotId) {
         return new Tester(robotId);
     else if (strcmp(type, "BayesWorker") == 0)
         return new BayesWorker(robotId);
-    else if (strcmp(type, "Transition") == 0)
-        return new Transition(robotId);
+    else if (strcmp(type, "SmartBot") == 0)
+        return new SmartBot(robotId);
     else
         return NULL;
 }
