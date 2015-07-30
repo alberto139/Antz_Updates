@@ -7,8 +7,14 @@
 
 namespace Antz
 {
-    class DllElem{
-    public:
+    class Dll;
+    class DllIter;
+
+    class DllElem
+    {
+        friend class Dll;
+        friend class DllIter;
+    private:
         DllElem(Neighbor& itmPtr);
         Neighbor* item;
         DllElem *next;
@@ -16,9 +22,22 @@ namespace Antz
         
     };
 
-    class Dll {
+    class DllIter
+    {
+        friend class Dll;
     public:
-        DllElem *iter;
+        Neighbor* getNext();
+        bool hasNext();
+    private:
+        DllIter(Dll& _list);
+        Dll* list;
+        DllElem* pointer;
+    };
+
+    class Dll
+    {
+        friend class DllIter;
+    public:
         Dll();
         ~Dll();
         void PushFront(Neighbor& itm);
@@ -29,8 +48,7 @@ namespace Antz
         int GetSize();
         void Insert(int index, Neighbor& itm);
         Neighbor* Remove(int index);
-        void intiIter();
-        DllElem* getNext();
+        DllIter* createIterator();
     private:
         int size;
         DllElem *head;

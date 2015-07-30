@@ -7,17 +7,32 @@ DllElem::DllElem(Neighbor& itemPtr)
   item = &itemPtr;
   prev = NULL;
   next = NULL;
-  
-
 }
 
+DllIter::DllIter(Dll& _list)
+{
+    list = &_list;
+    pointer = list->head;
+}
+
+Neighbor* DllIter::getNext()
+{
+    if (!hasNext())
+        return NULL;
+    Neighbor* neighbor = pointer->item;
+    pointer = pointer->next;
+    return neighbor;
+}
+
+bool DllIter::hasNext()
+{
+    return pointer != NULL;
+}
 
 Dll::Dll()
 {
-  head = tail = iter =  NULL;
+  head = tail =  NULL;
   size = 0;
-  
-
 }
 
 Dll::~Dll(){
@@ -26,16 +41,9 @@ Dll::~Dll(){
 
 }
 
-void Dll::intiIter(){
- iter = head;
-  
-}
-
-DllElem* Dll::getNext(){
- DllElem* temp = iter;
- iter = iter->next;
- return temp;
-  
+DllIter* Dll::createIterator()
+{
+    return new DllIter(*this);
 }
 
 void Dll::PushFront(Neighbor& item){
