@@ -30,6 +30,8 @@ namespace Antz
         bool hasNext();
     private:
         DllIter(Dll& _list);
+        DllElem* getNextElem();
+
         Dll* list;
         DllElem* pointer;
     };
@@ -48,6 +50,7 @@ namespace Antz
         int GetSize();
         void Insert(int index, Neighbor& itm);
         Neighbor* Remove(int index);
+        bool remove(Neighbor& neighbor);
         DllIter* createIterator();
     private:
         int size;

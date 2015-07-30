@@ -17,11 +17,7 @@ DllIter::DllIter(Dll& _list)
 
 Neighbor* DllIter::getNext()
 {
-    if (!hasNext())
-        return NULL;
-    Neighbor* neighbor = pointer->item;
-    pointer = pointer->next;
-    return neighbor;
+    return getNextElem()->item;
 }
 
 bool DllIter::hasNext()
@@ -29,10 +25,19 @@ bool DllIter::hasNext()
     return pointer != NULL;
 }
 
+DllElem* DllIter::getNextElem()
+{
+    if (!hasNext())
+        return NULL;
+    DllElem* toReturn = pointer;
+    pointer = pointer->next;
+    return toReturn;
+}
+
 Dll::Dll()
 {
-  head = tail =  NULL;
-  size = 0;
+    head = tail =  NULL;
+    size = 0;
 }
 
 Dll::~Dll(){
@@ -196,5 +201,33 @@ Neighbor* Dll::Remove(int index){
     return ret;
 
   }
+}
+
+bool Dll::remove(Neighbor& neighbor)
+{
+    DllIter* iter = createIterator();
+    while (iter->hasNext())
+    {
+        DllElem* current = iter->getNextElem();
+        if (current->item == &neighbor)
+        {
+            if (current->prev == NULL)
+                head = current->next;
+            else
+                current->prev->next = current->next;
+
+            if (current->next == NULL)
+                tail = current->prev;
+            else
+                current->next->prev = current->prev;
+
+            delete current;
+            delete iter;
+            return true;
+        }
+    }
+
+    delete iter;
+    return false;
 }
 

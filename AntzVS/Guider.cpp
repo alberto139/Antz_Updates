@@ -140,7 +140,7 @@ bool Guider::receiveSignal()
 
             DllIter* iter = list->createIterator();
             bool added = false;
-            Neighbor* tempN;;
+            Neighbor* tempN;
             while(!added && iter->hasNext())
             {
                 tempN = iter->getNext();
@@ -154,12 +154,12 @@ bool Guider::receiveSignal()
             if(added)
             {
                 Serial.println("Add to Linked List!!!!!!");
-                tempN->recievedFrom[i]++;
+                tempN->receivedFrom[i]++;
                 delete currentN;
             }
             else
             {
-                currentN->recievedFrom[i]++;
+                currentN->receivedFrom[i]++;
                 list->PushFront(*currentN);
             }
             delete iter;
@@ -181,46 +181,46 @@ bool Guider::receiveSignal()
     if(Wcount > 15)
     {      // 10 might need to be changed
 
-      DllIter* iter = list->createIterator();
-    while(iter->hasNext())
-    {
-        Neighbor* temp = iter->getNext();
-        Serial.print("element ");
-        Serial.println(temp->id);
-        Serial.println(" ---Sensor Count ----");
-        for(int i = 0; i<6;i++)
-            Serial.print(temp->recievedFrom[i]);
-        temp = iter->getNext();
-    }
-    delete iter;
+        DllIter* iter = list->createIterator();
+        while(iter->hasNext())
+        {
+            Neighbor* temp = iter->getNext();
+            Serial.print("element ");
+            Serial.println(temp->id);
+            Serial.println(" ---Sensor Count ----");
+            for(int i = 0; i<6;i++)
+                Serial.print(temp->receivedFrom[i]);
+            temp = iter->getNext();
+        }
+        delete iter;
         Serial.println("Collecting information...");
         // All the information is recieved and stored
         // Now sort and add to Neighborhood  
-        for(int i = 0; i<6;i++)
+        for(int i = 0; i < 6; i++)
         {
             DllIter* iter = list->createIterator();
             Neighbor* curMax = iter->getNext();
             while(iter->hasNext())
             {
                 Neighbor* next = iter->getNext();
-                if(curMax->recievedFrom[i] < next->recievedFrom[i])
+                if(curMax->receivedFrom[i] < next->receivedFrom[i])
                     curMax = next;
-                    Serial.print("\niter -> ID: ");
-              Serial.println(next->id);
-              Serial.print("iter -> val: ");
-              Serial.println(next->recievedFrom[i]);
-              Serial.print("Sensor #: ");
+                Serial.print("\niter -> ID: ");
+                Serial.println(next->id);
+                Serial.print("iter -> val: ");
+                Serial.println(next->receivedFrom[i]);
+                Serial.print("Sensor #: ");
                 Serial.print("loop");
             }
             Serial.print("curMax Id: ");
             Serial.println(curMax->id);
             Serial.print("Sensor #: ");
             Serial.println(i);
-            if(curMax != NULL && curMax->recievedFrom[i] > 0)
+            if(curMax != NULL && curMax->receivedFrom[i] > 0)
             {
                 Neighborhood[i] = curMax;
-                //curMax->prev->next = curMax->next;
-                //curMax->next->prev = curMax->prev;
+                Serial.print("Is neighbor removed correctly? : ");
+                Serial.println(list->remove(*curMax));
             }
             delete iter;
         }
