@@ -363,13 +363,18 @@ bool AntzRobot::isNeighborInArray(Neighbor& neighbor)
     return false;
 }
 
+
 int AntzRobot::countNeighbors()
 {
   int neighborCount = 0;
   //Printf of Neighborhood array
   Serial.println("Neighborhood array");
   for (int i = 0; i<6; i++){
-    Serial.print(Neighborhood[i] == NULL ? '_' : (char)(Neighborhood[i]->id + 48));
+   
+    if(Neighborhood[i] == NULL)
+      Serial.print("_");
+    else
+      Serial.print(Neighborhood[i]->id);
     Serial.print("  ");
     if (Neighborhood[i]!= NULL)
       neighborCount++;
