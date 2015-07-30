@@ -21,7 +21,13 @@ SmartBot::SmartBot(uint32_t robotId):
     curNest(NO_SIGNAL)
 {
     robotRole = new WorkerRole(*this);
-    wipeNeighbors();
+    
+    //wipeNeighbors();
+      for (int i = 0; i < 6; i++)
+    {
+        //delete neighbors[i];
+        neighbors[i] = NULL;
+    }
 }
 
 SmartBot::~SmartBot()
