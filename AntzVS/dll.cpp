@@ -17,7 +17,8 @@ DllIter::DllIter(Dll& _list)
 
 Neighbor* DllIter::getNext()
 {
-    return getNextElem()->item;
+    DllElem* next = getNextElem();
+    return next == NULL ? NULL : next->item;
 }
 
 bool DllIter::hasNext()
