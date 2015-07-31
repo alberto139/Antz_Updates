@@ -1,4 +1,4 @@
-/* testing
+/* 
  * Antz
  * Antz Framework
  * AntzVS.ino
@@ -34,7 +34,7 @@
 using namespace Antz;
 
 /* Create a Worker ant */
-AntzRobot *antz = AntzRobot::createAntzRobot("SmartBot", ID);
+AntzRobot *antz = AntzRobot::createAntzRobot("Guider", ID);
 
 /*
  * setup - constructor of the sketch
