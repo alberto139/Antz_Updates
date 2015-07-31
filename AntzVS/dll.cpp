@@ -221,7 +221,7 @@ bool Dll::remove(Neighbor& neighbor)
                 tail = current->prev;
             else
                 current->next->prev = current->prev;
-
+            size--;
             delete current;
             delete iter;
             return true;
