@@ -212,11 +212,22 @@ bool Guider::receiveSignal()
             next = iter->getNext();
             
           }
-
-          if(curMax != NULL && curMax->receivedFrom[curMaxIndex] > 0 && curMax->id != 12)
+        
+          if(curMax != NULL && curMax->receivedFrom[curMaxIndex] > 0)
             {
+              if(Neighborhood[curMaxIndex] == NULL)
+              {
                 Neighborhood[curMaxIndex] = curMax;
                 Serial.println(list->remove(*curMax));
+              }else
+              {
+                curMax->receivedFrom[curMaxIndex] = 0;
+                int sum = 0;
+                for(int i=0;i<6;i++)
+                  sum += curMax->receivedFrom[i];
+                if(sum == 0)
+                  Serial.println(list->remove(*curMax));
+              }
             }
           delete iter;
         }
