@@ -28,6 +28,7 @@ namespace Antz {
         virtual bool receiveSignal();
         virtual void sendSignal();
         virtual void transition();
+        bool isNeighborValid(Neighbor& neighbor);
         
         bool recalculation = false;
         

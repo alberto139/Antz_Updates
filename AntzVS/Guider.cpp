@@ -121,55 +121,56 @@ bool Guider::receiveSignal()
                     minNest = nest;
                 if (food > 0 && food < minFood)
                     minFood = food;
-            }
-            
-            
-            
-            
-            
-            Neighbor* currentN = new Neighbor(number);
-            //Serial.println("Start NEW code");
-    //check to see if neighbor is in linkedlist already
-            
-            /*
-            Serial.print("ID:");
-            Serial.println(currentN->id);
-            Serial.print("SEnsor:");
-            Serial.println(i);
-            Serial.print("Whole number:");
-            Serial.println(currentN->orgSignal, BIN);
-            */
 
-            DllIter* iter = list->createIterator();
-            bool added = false;
-            Neighbor* tempN;
-            while(!added && iter->hasNext())
-            {
-                tempN = iter->getNext();
-                if(tempN->id == currentN->id)
+
+
+
+
+
+                Neighbor* currentN = new Neighbor(number);
+                if (isNeighborValid(*currentN))
                 {
-                    //Serial.println("Add to Linked List");
-                    added = true;
+                    //Serial.println("Start NEW code");
+                    //check to see if neighbor is in linkedlist already
+
+                    /*
+                    Serial.print("ID:");
+                    Serial.println(currentN->id);
+                    Serial.print("SEnsor:");
+                    Serial.println(i);
+                    Serial.print("Whole number:");
+                    Serial.println(currentN->orgSignal, BIN);
+                    */
+
+                    DllIter* iter = list->createIterator();
+                    bool added = false;
+                    Neighbor* tempN;
+                    while (!added && iter->hasNext())
+                    {
+                        tempN = iter->getNext();
+                        if (tempN->id == currentN->id)
+                        {
+                            //Serial.println("Add to Linked List");
+                            added = true;
+                        }
+
+                    }
+                    if (added)
+                    {
+                        //Serial.println("Add to Linked List!!!!!!");
+                        tempN->receivedFrom[i]++;
+                        delete currentN;
+                    }
+                    else
+                    {
+                        currentN->receivedFrom[i]++;
+                        list->PushFront(*currentN);
+                    }
+                    delete iter;
                 }
-                    
+                else
+                    delete currentN;
             }
-            if(added)
-            {
-                //Serial.println("Add to Linked List!!!!!!");
-                tempN->receivedFrom[i]++;
-                delete currentN;
-            }
-            else
-            {
-                currentN->receivedFrom[i]++;
-                list->PushFront(*currentN);
-            }
-            delete iter;
-     
-            
-//            if(!isNeighborInArray(currentN) && currentN.id < 12)
-//                Neighborhood[i] = currentN;
-//           
             
 
         } // end of if (recver.canHearSignal(i))
@@ -225,7 +226,7 @@ bool Guider::receiveSignal()
             Serial.print("Sensor #: ");
             Serial.println(i);
             */
-            if(curMax != NULL && curMax->receivedFrom[i] > 0 && curMax->id != 12)
+            if(curMax != NULL && curMax->receivedFrom[i] > 0)
             {
                 Neighborhood[i] = curMax;
                 //Serial.print("Is neighbor removed correctly? : ");
@@ -313,4 +314,10 @@ void Guider::transition(){
   while(true){
     antz->loop();
   }
+}
+
+bool Guider::isNeighborValid(Neighbor& neighbor)
+{
+    return (neighbor.curFood == 0xFF || abs(neighbor.curFood - curFood) <= 2)
+        && (neighbor.curNest == 0xFF || abs(neighbor.curNest - curNest) <= 2);
 }
