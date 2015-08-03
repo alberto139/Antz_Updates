@@ -16,10 +16,10 @@ namespace Antz
         friend class DllIter;
     private:
         DllElem(Neighbor& itmPtr);
+
         Neighbor* item;
-        DllElem *next;
-        DllElem *prev;
-        
+        DllElem* next;
+        DllElem* prev;
     };
 
     class DllIter
@@ -42,20 +42,20 @@ namespace Antz
     public:
         Dll();
         ~Dll();
-        void PushFront(Neighbor& itm);
-        void PushBack(Neighbor& itm);
-        Neighbor* PopFront();
-        Neighbor* PopBack();
-        bool IsEmpty();
-        int GetSize();
-        void Insert(int index, Neighbor& itm);
-        Neighbor* Remove(int index);
+        void pushFront(Neighbor& neighbor);
+        void pushBack(Neighbor& neighbor);
+        Neighbor* popFront();
+        Neighbor* popBack();
+        bool isEmpty();
+        int getSize();
         bool remove(Neighbor& neighbor);
         DllIter* createIterator();
     private:
+        bool remove(DllElem* elem);
+
         int size;
-        DllElem *head;
-        DllElem *tail;
+        DllElem* head;
+        DllElem* tail;
 
     };
 

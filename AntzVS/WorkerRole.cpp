@@ -88,15 +88,15 @@ bool WorkerRole::receiveSignal(int& roleDecision)
                 signalIndex = idx[i];
                 minNumber = number;
             }
-        }
 
-        Neighbor* currentN = new Neighbor(number);
-        if (!robot.isNeighborInArray(*currentN) && currentN->id < 12)
-            robot.neighbors[i] = currentN;
+            Neighbor* currentN = new Neighbor(number);
+            if (robot.isNeighborValid(*currentN))            {                //robot.minFood = min(currentN->curFood, robot.minFood);                //robot.minNest = min(currentN->curNest, robot.minNest);                robot.registerRobotSignal(*currentN, i);            }            else                delete currentN;
+        }
     }
 
     if (robot.wipingNeighborsTimer == 0)
     {
+        robot.formNeighborhood();
         if (robot.countNeighbors() == 1 && target == TARGET_FOOD)
             roleDecision = SWITCH_ROLE;
 

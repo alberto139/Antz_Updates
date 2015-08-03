@@ -41,10 +41,11 @@ Dll::Dll()
     size = 0;
 }
 
-Dll::~Dll(){
-  while(PopFront() !=NULL)
-    ;
-
+Dll::~Dll()
+{
+    Neighbor* deleted;
+    while ((deleted = popFront()) != NULL)
+        delete deleted;
 }
 
 DllIter* Dll::createIterator()
@@ -52,183 +53,120 @@ DllIter* Dll::createIterator()
     return new DllIter(*this);
 }
 
-void Dll::PushFront(Neighbor& item){
-  if(IsEmpty())
+void Dll::pushFront(Neighbor& neighbor)
+{
+    DllElem* newElem = new DllElem(neighbor);
+    if (isEmpty())
     {
-      DllElem *temp = new DllElem(item);
-      head = temp;
-      tail = temp;
-      size++;
-
-    }else{
-    DllElem *temp = new DllElem(item);
-    temp->next = head;
-    head->prev = temp;
-    head = temp;
-    size++;
-  }
-
-}
-
-
-
-void Dll::PushBack(Neighbor& item){
-  if(IsEmpty())
+        head = newElem;
+        tail = newElem;
+    }
+    else
     {
-      DllElem *temp = new DllElem(item);
-      head = temp;
-      tail = temp;
-      size++;
-
-    }else{
-    DllElem *temp = new DllElem(item);
-    temp->prev = head;
-    tail->next = temp;
-    tail = temp;
-    size++;
-  }
-
-}
-
-Neighbor* Dll::PopFront(){
-
-  if(size == 0)
-    return NULL;
-  else if(size == 1){
-    Neighbor* ret = head->item;
-    delete head;
-    head = tail = NULL;
-    size--;
-    return ret;
-
-  }else{
-    DllElem *temp = head;
-    head = head->next;
-    head->prev = NULL;
-    size--;
-    Neighbor* ret = temp->item;
-    delete temp;
-    return ret;
-    
-  }
-
-}
-Neighbor* Dll::PopBack(){
-
-  if(size == 0)
-    return NULL;
-  else if(size == 1){
-    Neighbor* ret = head->item;
-    delete head;
-    head = tail = NULL;
-    size--;
-    return ret;
-
-  }else{
-    DllElem *temp = tail;
-    tail = tail->prev;
-    tail->next = NULL;
-    size--;
-    Neighbor* ret = temp->item;
-    delete temp;
-    return ret;
-
-  }
-
-}
-
-bool Dll::IsEmpty(){
-  return (size == 0);
-}
-
-
-int Dll::GetSize(){
-  return size;
-}
-
-
-void Dll::Insert(int index, Neighbor& item){
-  if(index+1 > size)
-    ;
-  else{
-    DllElem *temp = new DllElem(item);
-    DllElem *sentinal = head;
-    int i = 0;
-    
-    while(i< index){
-      sentinal = sentinal->next;
-      i++;
+        newElem->next = head;
+        head->prev = newElem;
+        head = newElem;
     }
-    temp->prev = sentinal->prev;
-    temp->next = sentinal;
-    sentinal->prev->next = temp;
-    sentinal->prev = temp;
     size++;
-    delete temp;
-    delete sentinal;
-  }
+}
+
+void Dll::pushBack(Neighbor& neighbor)
+{
+    DllElem* newElem = new DllElem(neighbor);
+    if (isEmpty())
+    {
+        head = newElem;
+        tail = newElem;
+    }
+    else
+    {
+        newElem->prev = tail;
+        tail->next = newElem;
+        tail = newElem;
+    }
+    size++;
+}
+
+Neighbor* Dll::popFront()
+{
+    if (size == 0)
+        return NULL;
+    Neighbor* toReturn;
+    if (size == 1)
+    {
+        toReturn = head->item;
+        delete head;
+        head = tail = NULL;
+    }
+    else
+    {
+        toReturn = head->item;
+        head = head->next;
+        delete head->prev;
+        head->prev = NULL;
+    }
+    size--;
+    return toReturn;
 
 }
 
-Neighbor* Dll::Remove(int index){
-  if(index >= size)
-    return NULL;
-  else if(index == 0){
-    Neighbor* ret = head->item;
-    head = head->next;
-    size--;
-    return ret;
-  }
-  else if(index == (size - 1)){
-    Neighbor* ret = tail->item;
-    tail = tail->prev;
-    size--;
-    return ret;
-
-  }
-
-  else{
-    DllElem *sentinal = head;
-    int i = 0;
-    while(i<index){
-      sentinal = sentinal->next;
-      i++;
+Neighbor* Dll::popBack()
+{
+    if (size == 0)
+        return NULL;
+    if (size == 1)
+        return popFront();
+    else
+    {
+        Neighbor* toReturn = tail->item;
+        tail = tail->prev;
+        delete tail->next;
+        tail->next = NULL;
+        size--;
+        return toReturn;
     }
-    sentinal->prev->next = sentinal->next;
-    sentinal->next->prev = sentinal->prev;
-    size--;
-    Neighbor* ret = sentinal->item;
-    delete sentinal;
-    return ret;
+}
 
-  }
+bool Dll::isEmpty()
+{
+    return size == 0;
+}
+
+int Dll::getSize()
+{
+    return size;
+}
+
+bool Dll::remove(DllElem* elem)
+{
+    if (elem == NULL)
+        return false;
+
+    if (elem->prev == NULL)
+        head = elem->next;
+    else
+        elem->prev->next = elem->next;
+
+    if (elem->next == NULL)
+        tail = elem->prev;
+    else
+        elem->next->prev = elem->prev;
+    size--;
+    delete elem;
+    return true;
 }
 
 bool Dll::remove(Neighbor& neighbor)
 {
     DllIter* iter = createIterator();
-    while (iter->hasNext())
+    DllElem* toRemove = NULL;
+    while (iter->hasNext() && toRemove == NULL)
     {
         DllElem* current = iter->getNextElem();
         if (current->item == &neighbor)
-        {
-            if (current->prev == NULL)
-                head = current->next;
-            else
-                current->prev->next = current->next;
-
-            if (current->next == NULL)
-                tail = current->prev;
-            else
-                current->next->prev = current->prev;
-            size--;
-            delete current;
-            delete iter;
-            return true;
-        }
+            toRemove = current;
     }
-
     delete iter;
-    return false;
+    return remove(toRemove);
 }
 

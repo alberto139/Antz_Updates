@@ -164,7 +164,7 @@ bool Guider::receiveSignal()
                     else
                     {
                         currentN->receivedFrom[i]++;
-                        list->PushFront(*currentN);
+                        list->pushFront(*currentN);
                     }
                     delete iter;
                 }
@@ -185,7 +185,7 @@ bool Guider::receiveSignal()
     {      // 10 might need to be changed
 
 
-     while(!list->IsEmpty() && countNeighbors() < 6)
+     while(!list->isEmpty() && countNeighbors() < 6)
         {
           DllIter* iter = list->createIterator();
           Neighbor* curMax = iter->getNext();

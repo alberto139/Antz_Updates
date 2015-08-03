@@ -37,18 +37,22 @@ namespace Antz
 
     private:
         void wipeNeighbors();
+        void registerRobotSignal(Neighbor& robot, int sensor);
+        void formNeighborhood();
         int countNeighbors();
-        bool isNeighborInArray(Neighbor& neighbor);
+        //bool isNeighborInArray(Neighbor& neighbor); // not used anymore
+        bool isNeighborValid(Neighbor& neighbor);
 
         Role* robotRole;
-        Neighbor* neighbors[6];
+        Neighbor* neighbors[6] = { NULL };
+        Dll* seenRobots;
         int wipingNeighborsTimer; // timer for wiping neighbors array
         
         Sender sender;
         uint16_t minFood;
         uint16_t minNest;
-        uint16_t curFood;
-        uint16_t curNest;
+        int16_t curFood;
+        int16_t curNest;
     };
 }
 
