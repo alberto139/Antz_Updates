@@ -20,7 +20,7 @@ SmartBot::SmartBot(uint32_t robotId):
     curFood(NO_SIGNAL),
     curNest(NO_SIGNAL)
 {
-    robotRole = new WorkerRole(*this);
+    robotRole = new GuiderRole(*this);
     seenRobots = new Dll();
 }
 
@@ -160,7 +160,7 @@ int SmartBot::countNeighbors()
 
 bool SmartBot::isNeighborValid(Neighbor& neighbor)
 {
-    return (neighbor.curFood == 0xFF || abs(neighbor.curFood - curFood) <= 2)
-        && (neighbor.curNest == 0xFF || abs(neighbor.curNest - curNest) <= 2)
-        && neighbor.curFood != 0 && neighbor.curNest != 0;
+    return (neighbor.curFood == 0xFF || abs(neighbor.curFood - curFood) <= 2 || curFood == 0xFF)
+        && (neighbor.curNest == 0xFF || abs(neighbor.curNest - curNest) <= 2 || curNest == 0xFF);
+        //&& neighbor.curFood != 0 && neighbor.curNest != 0;
 }

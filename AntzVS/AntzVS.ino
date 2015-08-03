@@ -34,7 +34,7 @@
 using namespace Antz;
 
 /* Create a Worker ant */
-AntzRobot *antz = AntzRobot::createAntzRobot("Guider", ID);
+AntzRobot *antz = AntzRobot::createAntzRobot("SmartBot", ID);
 
 /*
  * setup - constructor of the sketch
