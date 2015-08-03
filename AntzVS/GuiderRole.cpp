@@ -15,7 +15,15 @@ int GuiderRole::makeStep()
     if(Reposcount > NEIGHBORS_COLLECTION_TIME_GUID * 5)
     {
       Serial.println("Turning...");
-      robot.turnLeft(10);
+      
+      int turnDegrees = random(15);
+      
+      if (turnDegrees%2 == 0) 
+       robot.turnLeft(turnDegrees);
+      else
+       robot.turnRight(turnDegrees);
+       
+     
       Reposcount = 0;
     }
     robot.minFood = NO_SIGNAL;			// to store the minimum food cardinality
@@ -46,9 +54,9 @@ int GuiderRole::makeStep()
             * from food whereas the number which appears for a very short time is the
             * number from nest
             */
-            display.number(true, robot.curFood);
-            delay(100);
-            display.number(true, robot.curNest);
+            //display.number(true, robot.curFood);
+            //delay(100);
+            //display.number(true, robot.curNest);
             /* Display self position and forward the message to other guiders and workers */
             sendSignal();
         }
@@ -78,10 +86,10 @@ bool GuiderRole::receiveSignal(int& roleDecision)
             if (robot.recver.recvFrom(i, &receivedSignal))
             {	
                 Neighbor* currentN = new Neighbor(receivedSignal);
+                
                 /*Serial.print("Received: ");
                 Serial.println(currentN->id);
-                Serial.println(currentN->orgSignal, BIN);
-                Serial.println(abs(currentN->curNest - robot.curNest) <= 2);*/
+                Serial.println(currentN->orgSignal, BIN);*/
                 if (robot.isNeighborValid(*currentN))
                 {
                     //Serial.println("validated");
@@ -101,6 +109,7 @@ bool GuiderRole::receiveSignal(int& roleDecision)
         robot.formNeighborhood();
         if (robot.countNeighbors() >= 3)
         {
+          
             if (!recalculation)
             {
                 recalculation = true;
@@ -110,6 +119,7 @@ bool GuiderRole::receiveSignal(int& roleDecision)
             }
             else
                 roleDecision = SWITCH_ROLE;
+           
         }
         else
         {

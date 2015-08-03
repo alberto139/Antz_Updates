@@ -51,8 +51,8 @@ namespace Antz
         Sender sender;
         uint16_t minFood;
         uint16_t minNest;
-        int16_t curFood;
-        int16_t curNest;
+        uint16_t curFood;
+        uint16_t curNest;
     };
 }
 

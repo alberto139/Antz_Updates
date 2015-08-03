@@ -18,11 +18,9 @@ void Role::sendSignal()
     *		           role identifier  curFood    curNest
     */
     uint32_t signalData = 0;
-    
     signalData |= (getRoleId() << 24);
     signalData |= (robot.identifier << 16);
     signalData |= (robot.curFood << 8);
     signalData |= robot.curNest;
-
     robot.sender.send(signalData, 500);
 }
