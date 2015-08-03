@@ -35,8 +35,8 @@ namespace Antz {
         
         uint16_t minFood;
         uint16_t minNest;
-        uint16_t curFood;
-        uint16_t curNest;
+        int16_t curFood;
+        int16_t curNest;
         uint64_t foodTimer;
         uint64_t nestTimer;
         uint8_t priority;

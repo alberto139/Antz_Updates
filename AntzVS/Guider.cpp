@@ -76,9 +76,9 @@ void Guider::loop() {
 	 * from food whereas the number which appears for a very short time is the 
 	 * number from nest
 	 */
-        display.number(true, curFood);
-        delay(100);
-        display.number(true, curNest);
+        // display.number(true, curFood); !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        // delay(100);
+        // display.number(true, curNest);
 	/* Display self position and forward the message to other guiders and workers */
         sendSignal();
     }
@@ -164,7 +164,7 @@ bool Guider::receiveSignal()
                     else
                     {
                         currentN->receivedFrom[i]++;
-                        list->pushFront(*currentN);
+                        list->PushFront(*currentN);
                     }
                     delete iter;
                 }
@@ -181,25 +181,27 @@ bool Guider::receiveSignal()
     
 
     // Wiping the neighborhood and populating with standard Neighbors with id -1
-    if(Wcount > 15)
+    if(Wcount > 100)
     {      // 10 might need to be changed
 
 
-     while(!list->isEmpty() && countNeighbors() < 6)
+     while(!list->IsEmpty()) //while(!list->IsEmpty() && countNeighbors() < 6)
         {
           DllIter* iter = list->createIterator();
-          Neighbor* curMax = iter->getNext();
+          Neighbor* curMax = NULL;
           int curMaxIndex = 0;
           int maxVal = 0;
-          Neighbor* next = curMax;
+          
           while(iter->hasNext())
           {
+            Neighbor* next = iter->getNext();
             int tempIndex = 0;
-            int sentinal = 1;
+            
+            
             for(int j = 0; j < 5; j++)
             {
-             if(next->receivedFrom[tempIndex] < next->receivedFrom[sentinal+j])
-                tempIndex = sentinal+j;
+             if(next->receivedFrom[tempIndex] < next->receivedFrom[j+1])
+                tempIndex = j+1;
             }
             
             if(next->receivedFrom[tempIndex] > maxVal)
@@ -209,16 +211,18 @@ bool Guider::receiveSignal()
               curMaxIndex = tempIndex;
             }
                 
-            next = iter->getNext();
-            
           }
+          
+          
+          
         
           if(curMax != NULL && curMax->receivedFrom[curMaxIndex] > 0)
             {
               if(Neighborhood[curMaxIndex] == NULL)
               {
                 Neighborhood[curMaxIndex] = curMax;
-                Serial.println(list->remove(*curMax));
+                list->remove(*curMax);
+                //Serial.println(list->remove(*curMax));
               }else
               {
                 curMax->receivedFrom[curMaxIndex] = 0;
@@ -226,7 +230,8 @@ bool Guider::receiveSignal()
                 for(int i=0;i<6;i++)
                   sum += curMax->receivedFrom[i];
                 if(sum == 0)
-                  Serial.println(list->remove(*curMax));
+                  list->remove(*curMax);
+                  //Serial.println(list->remove(*curMax));
               }
             }
           delete iter;
@@ -293,13 +298,13 @@ bool Guider::receiveSignal()
             if(!recalculation)
             {
                 recalculation = true;
-                Serial.println("Recalculating...");
+                //Serial.println("Recalculating...");
                 delay(random(1000));
                 Wcount = -15;
             }
             else
             {
-                Serial.println("I am going to Transition role");
+                //Serial.println("I am going to Transition role");
                 //transition();
             }
         }
@@ -312,7 +317,7 @@ bool Guider::receiveSignal()
         
         for (int j = 0; j<6; j++)
             Neighborhood[j] = NULL;
-        Serial.println("-----------------------------------------");
+        //Serial.println("-----------------------------------------");
         delete list;
         list = new Dll();
     }

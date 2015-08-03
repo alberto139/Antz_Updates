@@ -368,21 +368,24 @@ int AntzRobot::countNeighbors()
 {
   int neighborCount = 0;
   //Printf of Neighborhood array
-  Serial.println("Neighborhood array");
+ // Serial.println("Neighborhood array");
   for (int i = 0; i<6; i++){
    
-    if(Neighborhood[i] == NULL)
-      Serial.print("_");
-    else
-      Serial.print(Neighborhood[i]->id);
-    Serial.print("  ");
+    //if(Neighborhood[i] == NULL)
+    //  Serial.print("_");
+    //else
+    //  Serial.print(Neighborhood[i]->id);
+    //Serial.print("  ");
     if (Neighborhood[i]!= NULL)
       neighborCount++;
   }
-    Serial.println("");
-    Serial.print("# Neighbors: ");
-    Serial.println(neighborCount);
+   // Serial.println("");
+   // Serial.print("# Neighbors: ");
+   // Serial.println(neighborCount);
     //End of Printf of Neighborhood array
+  display.number(true, 1000);
+  delay(100);
+  display.number(true, neighborCount);
   return neighborCount;
 }
 
