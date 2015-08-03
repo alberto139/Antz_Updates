@@ -24,6 +24,7 @@ namespace Antz
 
         int getRoleId() { return ROLE_GUIDER; };
         int makeStep();
+        int Reposcount = 0;
 
     private:
         bool receiveSignal(int& roleDecision);
