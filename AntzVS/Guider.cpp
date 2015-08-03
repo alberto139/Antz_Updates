@@ -185,21 +185,25 @@ bool Guider::receiveSignal()
     {      // 10 might need to be changed
 
 
-     while(!list->IsEmpty() && countNeighbors() < 6)
+     while(!list->IsEmpty()) //while(!list->IsEmpty() && countNeighbors() < 6)
         {
           DllIter* iter = list->createIterator();
-          Neighbor* curMax = iter->getNext();
+          Neighbor* curMax = NULL;
           int curMaxIndex = 0;
           int maxVal = 0;
-          Neighbor* next = curMax;
+          
+          Serial.println("In IsEmpty() Loop---------------------------");
+          
           while(iter->hasNext())
           {
+            Neighbor* next = iter->getNext();
             int tempIndex = 0;
-            int sentinal = 1;
+            
+            
             for(int j = 0; j < 5; j++)
             {
-             if(next->receivedFrom[tempIndex] < next->receivedFrom[sentinal+j])
-                tempIndex = sentinal+j;
+             if(next->receivedFrom[tempIndex] < next->receivedFrom[j+1])
+                tempIndex = j+1;
             }
             
             if(next->receivedFrom[tempIndex] > maxVal)
@@ -209,9 +213,13 @@ bool Guider::receiveSignal()
               curMaxIndex = tempIndex;
             }
                 
-            next = iter->getNext();
             
+            
+            Serial.println("In hasNext() Loop---------------------------");
           }
+          
+          
+          
         
           if(curMax != NULL && curMax->receivedFrom[curMaxIndex] > 0)
             {
