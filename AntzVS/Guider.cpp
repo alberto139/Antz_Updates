@@ -76,9 +76,9 @@ void Guider::loop() {
 	 * from food whereas the number which appears for a very short time is the 
 	 * number from nest
 	 */
-        display.number(true, curFood);
-        delay(100);
-        display.number(true, curNest);
+        // display.number(true, curFood); !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        // delay(100);
+        // display.number(true, curNest);
 	/* Display self position and forward the message to other guiders and workers */
         sendSignal();
     }
@@ -181,7 +181,7 @@ bool Guider::receiveSignal()
     
 
     // Wiping the neighborhood and populating with standard Neighbors with id -1
-    if(Wcount > 30)
+    if(Wcount > 100)
     {      // 10 might need to be changed
 
 
@@ -191,8 +191,6 @@ bool Guider::receiveSignal()
           Neighbor* curMax = NULL;
           int curMaxIndex = 0;
           int maxVal = 0;
-          
-          Serial.println("In IsEmpty() Loop---------------------------");
           
           while(iter->hasNext())
           {
@@ -213,9 +211,6 @@ bool Guider::receiveSignal()
               curMaxIndex = tempIndex;
             }
                 
-            
-            
-            Serial.println("In hasNext() Loop---------------------------");
           }
           
           
@@ -226,7 +221,8 @@ bool Guider::receiveSignal()
               if(Neighborhood[curMaxIndex] == NULL)
               {
                 Neighborhood[curMaxIndex] = curMax;
-                Serial.println(list->remove(*curMax));
+                list->remove(*curMax);
+                //Serial.println(list->remove(*curMax));
               }else
               {
                 curMax->receivedFrom[curMaxIndex] = 0;
@@ -234,7 +230,8 @@ bool Guider::receiveSignal()
                 for(int i=0;i<6;i++)
                   sum += curMax->receivedFrom[i];
                 if(sum == 0)
-                  Serial.println(list->remove(*curMax));
+                  list->remove(*curMax);
+                  //Serial.println(list->remove(*curMax));
               }
             }
           delete iter;
@@ -301,13 +298,13 @@ bool Guider::receiveSignal()
             if(!recalculation)
             {
                 recalculation = true;
-                Serial.println("Recalculating...");
+                //Serial.println("Recalculating...");
                 delay(random(1000));
                 Wcount = -15;
             }
             else
             {
-                Serial.println("I am going to Transition role");
+                //Serial.println("I am going to Transition role");
                 //transition();
             }
         }
@@ -320,7 +317,7 @@ bool Guider::receiveSignal()
         
         for (int j = 0; j<6; j++)
             Neighborhood[j] = NULL;
-        Serial.println("-----------------------------------------");
+        //Serial.println("-----------------------------------------");
         delete list;
         list = new Dll();
     }
