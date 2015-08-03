@@ -22,8 +22,8 @@ namespace Antz
 
         uint32_t orgSignal;
         int id;
-        uint8_t curFood;
-        uint8_t curNest;
+        int curFood;
+        int curNest;
         bool foodFound;
         uint8_t role;
         int receivedFrom[6];

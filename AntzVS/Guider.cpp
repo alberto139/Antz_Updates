@@ -181,7 +181,7 @@ bool Guider::receiveSignal()
     
 
     // Wiping the neighborhood and populating with standard Neighbors with id -1
-    if(Wcount > 15)
+    if(Wcount > 30)
     {      // 10 might need to be changed
 
 
