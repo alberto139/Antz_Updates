@@ -220,9 +220,9 @@ bool AntzRobot::blocked() {
     bool detected2 = false; // check twice to make sure that something is actually there
     float angle;
     bool async = true;
-    if (scanner.scan(&angle) <= 30) 
+    if (scanner.scan(&angle) <= 25) 
       detected1 = true; // the robot saw something the FIRST time
-    if (scanner.scan(&angle) <= 30) 
+    if (scanner.scan(&angle) <= 25) 
       detected2 = true; // the robot saw something the SECOND time
 
 
@@ -242,6 +242,7 @@ void AntzRobot::evasiveAction(){ // should be improved
        // possible deadlock
        async = false;
        deg = 80; // when it turns it should end up 180 degrees from where it started facing
+       avoidCnt = 0;
     }
     turnLeft(deg, async);
     obstacleSeen = blocked();

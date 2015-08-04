@@ -90,15 +90,22 @@ bool WorkerRole::receiveSignal(int& roleDecision)
             }
 
             Neighbor* currentN = new Neighbor(number);
-            if (robot.isNeighborValid(*currentN))            {                //robot.minFood = min(currentN->curFood, robot.minFood);                //robot.minNest = min(currentN->curNest, robot.minNest);                robot.registerRobotSignal(*currentN, i);            }            else                delete currentN;
+            if (robot.isNeighborValid(*currentN))
+            {
+                //robot.minFood = min(currentN->curFood, robot.minFood);
+                //robot.minNest = min(currentN->curNest, robot.minNest);
+                robot.registerRobotSignal(*currentN, i);
+            }
+            else
+                delete currentN;
         }
     }
 
     if (robot.wipingNeighborsTimer == 0)
     {
         robot.formNeighborhood();
-        if (robot.countNeighbors() == 1 && target == TARGET_FOOD)
-            roleDecision = SWITCH_ROLE;
+//        if (robot.countNeighbors() == 1 && target == TARGET_FOOD) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//            roleDecision = SWITCH_ROLE;
 
         robot.wipingNeighborsTimer = NEIGHBORS_COLLECTION_TIME_WORK;
         robot.wipeNeighbors();
@@ -116,7 +123,7 @@ void WorkerRole::makeMovement()
     {
         case IDX_FRONT:
             if (!robot.blocked())
-                robot.goForward(500);
+                robot.goForward(400);
             else
                 robot.evasiveAction();
             break;
@@ -158,20 +165,21 @@ void WorkerRole::randomWalkGo()
         case 2:
             robot.turnRight(60, false);
             if (!robot.blocked())				// if there is no obstacle
-                robot.goForward(500);
+                robot.goForward(400);
             else
                 robot.evasiveAction();
             break;
         default:
             robot.turnLeft(60, false);
-            int cnt = movePhase;
-            while (cnt-- > 0)
-            {
+            //int cnt = movePhase;
+            //while (cnt-- > 0)
+           // {
                 if (!robot.blocked())			// if there is no obstacle
-                    robot.goForward(500);
+                    robot.goForward(400);
                 else
                     robot.evasiveAction();
-            }
+            //}
+            movePhase = -1;
             break;
     }
     movePhase++;

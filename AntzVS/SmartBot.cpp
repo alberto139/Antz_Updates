@@ -20,7 +20,8 @@ SmartBot::SmartBot(uint32_t robotId):
     curFood(NO_SIGNAL),
     curNest(NO_SIGNAL)
 {
-    robotRole = new GuiderRole(*this);
+    //robotRole = new GuiderRole(*this);
+    robotRole = new WorkerRole(*this);
     seenRobots = new Dll();
 }
 
