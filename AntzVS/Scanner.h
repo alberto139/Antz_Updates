@@ -14,7 +14,7 @@
 #define SERVO_SPD     (120.f / 60.f) // per degree
 #define MIN_POS       15.f
 #define MAX_POS       165.f
-#define NUM_OF_STOPS  5
+#define NUM_OF_STOPS  3 // changed from 5
 #define INTERVAL      ((MAX_POS - MIN_POS) / (NUM_OF_STOPS - 1))
 
 #include <Arduino.h>
@@ -34,10 +34,11 @@ namespace Antz {
         Scanner();
         void startup();
         float scan(float* angle);
+        Infrared ir; // changed from private for debugging
     private:
         bool forward;
         Servo servo;
-        Infrared ir;
+        
     };
 }
 

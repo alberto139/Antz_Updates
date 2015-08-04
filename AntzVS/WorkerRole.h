@@ -52,6 +52,8 @@ namespace Antz
         uint8_t nestIndex;
         uint16_t movePhase;
         uint8_t noMoveCnt;
+
+        int randomCircleCnt;
     };
 }
 

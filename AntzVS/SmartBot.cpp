@@ -20,8 +20,8 @@ SmartBot::SmartBot(uint32_t robotId):
     curFood(NO_SIGNAL),
     curNest(NO_SIGNAL)
 {
-    //robotRole = new GuiderRole(*this);
-    robotRole = new WorkerRole(*this);
+    robotRole = new GuiderRole(*this);
+    //robotRole = new WorkerRole(*this);
     seenRobots = new Dll();
 }
 
@@ -132,11 +132,14 @@ void SmartBot::formNeighborhood()
 
 int SmartBot::countNeighbors()
 {
+    display.yellow(false); 
     int neighborCount = 0;
     //Printf of Neighborhood array
     Serial.println("Neighborhood array");
     for (int i = 0; i < 6; i++)
     {
+        if(neighbors[i] != NULL && neighbors[i]->id == 0)
+            display.yellow(true); //I can see the nest!
         if (neighbors[i] == NULL)
             Serial.print("_");
         else

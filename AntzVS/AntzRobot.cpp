@@ -134,6 +134,7 @@ void AntzRobot::goBackward(uint64_t msecs, bool async) {
  * @ async:	flag to specify whether to turn left in synchronous or asynchronous manner
  */
 void AntzRobot::turnLeft(float degree, bool async) {
+     //Serial.printl(degree);
     bayesUpdate();
     Timer3.detachInterrupt();		// disable the timer interrupt
     motor.left();			// perform the action
@@ -220,9 +221,9 @@ bool AntzRobot::blocked() {
     bool detected2 = false; // check twice to make sure that something is actually there
     float angle;
     bool async = true;
-    if (scanner.scan(&angle) <= 25) 
+    if (scanner.scan(&angle) <= 20) 
       detected1 = true; // the robot saw something the FIRST time
-    if (scanner.scan(&angle) <= 25) 
+    if (scanner.scan(&angle) <= 20) 
       detected2 = true; // the robot saw something the SECOND time
 
 

@@ -44,7 +44,7 @@ Scanner::Scanner() : forward(true) {}
 ////////////////////////////////////////////////////////////////
 void Scanner::startup() {
     servo.attach(SERVO_PIN);
-    servo.write(MAX_POS);
+    servo.write(90);
     delay(SERVO_SPD * 3);
 }
 

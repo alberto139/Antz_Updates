@@ -10,7 +10,10 @@ WorkerRole::WorkerRole(SmartBot& _robot)
     minSignal(0xFF),
     signalIndex(6),
     minNumber(0xFFFFFFFF),
-    randomMoveTimer(0)
+    randomMoveTimer(0),
+    movePhase(0),
+    randomCircleCnt(0)
+    
 {
     robot.wipingNeighborsTimer = NEIGHBORS_COLLECTION_TIME_WORK;
 }
@@ -28,7 +31,8 @@ int WorkerRole::makeStep()
     minNumber = 0xFFFFFFFF;
     int roleDecision = NO_SWITCH;
     //sendSignal(); -- for now workers do not send any signal
-    receiveSignal(roleDecision);
+    for(int i=0;i<5;i++)
+        receiveSignal(roleDecision);
 
     if (roleDecision == NO_SWITCH)
     {
@@ -47,6 +51,7 @@ int WorkerRole::makeStep()
         {
             if (millis() - randomMoveTimer > 1000)
             {
+                
                 randomWalkGo();
                 randomMoveTimer = millis();
             }
@@ -104,8 +109,8 @@ bool WorkerRole::receiveSignal(int& roleDecision)
     if (robot.wipingNeighborsTimer == 0)
     {
         robot.formNeighborhood();
-//        if (robot.countNeighbors() == 1 && target == TARGET_FOOD) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//            roleDecision = SWITCH_ROLE;
+        if (robot.countNeighbors() <= 1 && target == TARGET_FOOD) 
+            roleDecision = SWITCH_ROLE;
 
         robot.wipingNeighborsTimer = NEIGHBORS_COLLECTION_TIME_WORK;
         robot.wipeNeighbors();
@@ -170,17 +175,25 @@ void WorkerRole::randomWalkGo()
                 robot.evasiveAction();
             break;
         default:
-            robot.turnLeft(60, false);
-            //int cnt = movePhase;
-            //while (cnt-- > 0)
-           // {
+            
+            if(randomCircleCnt == 0)
+            {
+                robot.turnLeft(60, false);
+                randomCircleCnt = movePhase;
+            }
+            if (randomCircleCnt-- > 0)
+            {
                 if (!robot.blocked())			// if there is no obstacle
                     robot.goForward(400);
                 else
                     robot.evasiveAction();
-            //}
-            movePhase = -1;
+            }
+            //movePhase = -1;
             break;
     }
-    movePhase++;
+    if(randomCircleCnt == 0)
+        movePhase++;
 }
+
+
+

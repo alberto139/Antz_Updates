@@ -43,8 +43,8 @@ int GuiderRole::makeStep()
     {
         delay(random(priority) * 10);
 
-        if (!robot.recver.canHearSignal())
-        {
+        //if (!robot.recver.canHearSignal())//test
+        //{//test//test
             priority = DEFAULT_PRIORITY;
             display.sendingSignal(); // when red LED turns off and green turns on, the robot starts sending the signal
             /*
@@ -59,8 +59,11 @@ int GuiderRole::makeStep()
             //display.number(true, robot.curNest);
             /* Display self position and forward the message to other guiders and workers */
             sendSignal();
-        }
-        else if (priority >= 5)
+        //}//test
+//        else if (priority >= 5) //test
+//            priority -= 5;//test
+
+        if (priority >= 5)
             priority -= 5;
     }
     return roleDecision;
@@ -115,7 +118,7 @@ bool GuiderRole::receiveSignal(int& roleDecision)
                 recalculation = true;
                 Serial.println("Recalculating...");
                 delay(random(1000));
-                robot.wipingNeighborsTimer = 2 * NEIGHBORS_COLLECTION_TIME_GUID; // longer time for 2nd check
+                robot.wipingNeighborsTimer =  NEIGHBORS_COLLECTION_TIME_GUID; // same as 1st check
             }
             else
                 roleDecision = SWITCH_ROLE;

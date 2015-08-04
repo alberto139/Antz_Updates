@@ -37,6 +37,17 @@ void Tester::bayesPrint(const char *description) {
 ////////////////////////////////////////////////////////////////
 // Main loop
 void Tester::loop() {
+  //test distances
+  float angle;
+  Serial.println(scanner.ir.getDistance());
+  Serial.print("angle " );
+  Serial.println(angle);
+  delay(200);
+  if(scanner.ir.getDistance() > 20){
+    goForward(400);
+    delay(5000);
+  }
+  
     // test motor asynchronous movements
     /*
     goForward(1000);
@@ -117,8 +128,8 @@ void Tester::loop() {
      */
     
     // test higher speed
-    motor.left();
-    delay(500);
-    motor.stop();
-    delay(5000);
+   // motor.left();
+    //delay(500);
+    //motor.stop();
+    //delay(5000);
 }
