@@ -153,9 +153,9 @@ int SmartBot::countNeighbors()
     Serial.println(neighborCount);
     //End of Printf of Neighborhood array
     
-    display.number(true, 1000);
-   delay(100);
-   display.number(true, neighborCount);
+   // display.number(true, 1000);
+   //delay(100);
+   //display.number(true, neighborCount);
     
     return neighborCount;
     

@@ -65,9 +65,9 @@ int GuiderRole::makeStep()
             * from food whereas the number which appears for a very short time is the
             * number from nest
             */
-            //display.number(true, robot.curFood);
-            //delay(100);
-            //display.number(true, robot.curNest);
+            display.number(true, robot.curFood);
+            delay(100);
+            display.number(true, robot.curNest);
             /* Display self position and forward the message to other guiders and workers */
             sendSignal();
         }//test
