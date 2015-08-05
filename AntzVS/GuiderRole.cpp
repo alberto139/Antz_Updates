@@ -9,23 +9,29 @@ GuiderRole::GuiderRole(SmartBot& _robot)
     robot.wipingNeighborsTimer = NEIGHBORS_COLLECTION_TIME_GUID;
 }
 
-int GuiderRole::makeStep()
+void GuiderRole::makeTurn()
 {
-    Reposcount ++;
-    if(Reposcount > NEIGHBORS_COLLECTION_TIME_GUID * 5)
-    {
-      Serial.println("Turning...");
-      
       int turnDegrees = random(15);
       
       if (turnDegrees%2 == 0) 
        robot.turnLeft(turnDegrees);
       else
        robot.turnRight(turnDegrees);
-       
-     
-      Reposcount = 0;
-    }
+}
+
+int GuiderRole::makeStep()
+{
+    if(robot.wipingNeighborsTimer % 3 == 0)
+        makeTurn();
+
+  
+//    Reposcount ++;
+//    if(Reposcount > NEIGHBORS_COLLECTION_TIME_GUID * 5)
+//    {
+//      Serial.println("Turning...");
+//      makeTurn();
+//      Reposcount = 0;
+//    }
     robot.minFood = NO_SIGNAL;			// to store the minimum food cardinality
     robot.minNest = NO_SIGNAL;			// to store the minimum nest cardinality
 
@@ -36,15 +42,17 @@ int GuiderRole::makeStep()
     int roleDecision = NO_SWITCH;
     /* keep looping until message is heard */
 
-    //while (roleDecision == NO_SWITCH && (wait || robot.minNest == NO_SIGNAL && robot.minFood == NO_SIGNAL))
+    
+    while (roleDecision == NO_SWITCH && (wait || robot.minNest == NO_SIGNAL && robot.minFood == NO_SIGNAL))
         wait = receiveSignal(roleDecision);
 
+    robot.wipingNeighborsTimer--;
     if (roleDecision == NO_SWITCH)
     {
         delay(random(priority) * 10);
 
-        //if (!robot.recver.canHearSignal())//test
-        //{//test//test
+        if (!robot.recver.canHearSignal())//test
+        {//test//test
             priority = DEFAULT_PRIORITY;
             display.sendingSignal(); // when red LED turns off and green turns on, the robot starts sending the signal
             /*
@@ -59,12 +67,12 @@ int GuiderRole::makeStep()
             //display.number(true, robot.curNest);
             /* Display self position and forward the message to other guiders and workers */
             sendSignal();
-        //}//test
-//        else if (priority >= 5) //test
-//            priority -= 5;//test
+        }//test
+         else if (priority >= 5) //test
+            priority -= 5;//test
 
-        if (priority >= 5)
-            priority -= 5;
+//        if (priority >= 5)
+//            priority -= 5;
     }
     return roleDecision;
 }
@@ -133,7 +141,7 @@ bool GuiderRole::receiveSignal(int& roleDecision)
         //Serial.println("-----------------------------------------");
     }
 
-    robot.wipingNeighborsTimer--;
+    //robot.wipingNeighborsTimer--;
 
 
     if (robot.minNest < (uint16_t)0xFF && robot.minNest + 1 <= robot.curNest)

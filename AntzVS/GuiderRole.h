@@ -28,7 +28,8 @@ namespace Antz
 
     private:
         bool receiveSignal(int& roleDecision);
-
+        void makeTurn();
+        
         bool recalculation;
          // Maybe we should change the variable names below
         uint64_t foodTimer;
