@@ -42,17 +42,20 @@ int GuiderRole::makeStep()
     int roleDecision = NO_SWITCH;
     /* keep looping until message is heard */
 
-    
+    if(robot.curFood == NO_SIGNAL) //if the food is seen, only send signal
+    {
     while (roleDecision == NO_SWITCH && (wait || robot.minNest == NO_SIGNAL && robot.minFood == NO_SIGNAL))
         wait = receiveSignal(roleDecision);
 
+
     robot.wipingNeighborsTimer--;
+    }
     if (roleDecision == NO_SWITCH)
     {
         delay(random(priority) * 10);
 
-        if (!robot.recver.canHearSignal())//test
-        {//test//test
+        if (!robot.recver.canHearSignal())
+        {
             priority = DEFAULT_PRIORITY;
             display.sendingSignal(); // when red LED turns off and green turns on, the robot starts sending the signal
             /*
@@ -68,11 +71,8 @@ int GuiderRole::makeStep()
             /* Display self position and forward the message to other guiders and workers */
             sendSignal();
         }//test
-         else if (priority >= 5) //test
-            priority -= 5;//test
-
-//        if (priority >= 5)
-//            priority -= 5;
+         else if (priority >= 5) 
+            priority -= 5;
     }
     return roleDecision;
 }
