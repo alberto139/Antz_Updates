@@ -20,8 +20,8 @@ SmartBot::SmartBot(uint32_t robotId):
     curFood(NO_SIGNAL),
     curNest(NO_SIGNAL)
 {
-    robotRole = new GuiderRole(*this);
-    //robotRole = new WorkerRole(*this);
+    //robotRole = new GuiderRole(*this);
+    robotRole = new WorkerRole(*this);
     seenRobots = new Dll();
 }
 
@@ -42,8 +42,8 @@ void SmartBot::setup()
 /* loop -- loop routine for SmartBot robot */
 void SmartBot::loop()
 {
-    if (robotRole->makeStep() == SWITCH_ROLE)
-        switchRole();
+    if (robotRole->makeStep() == SWITCH_ROLE);
+        //switchRole();
 }
 
 void SmartBot::switchRole()

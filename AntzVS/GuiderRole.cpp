@@ -41,15 +41,19 @@ int GuiderRole::makeStep()
     bool wait = true;	// a flag indicating whether there're more signals to be heard
     int roleDecision = NO_SWITCH;
     /* keep looping until message is heard */
+// Commented out to act as stationarly beacon with no role changes **********
+//    if(robot.curFood == NO_SIGNAL) //if the food is seen, only send signal
+//    {
+//    while (roleDecision == NO_SWITCH && (wait || robot.minNest == NO_SIGNAL && robot.minFood == NO_SIGNAL))
+//        wait = receiveSignal(roleDecision);
+//
+//
+//    robot.wipingNeighborsTimer--;
+//    }
 
-    if(robot.curFood == NO_SIGNAL) //if the food is seen, only send signal
-    {
-    while (roleDecision == NO_SWITCH && (wait || robot.minNest == NO_SIGNAL && robot.minFood == NO_SIGNAL))
+while (roleDecision == NO_SWITCH && (wait || robot.minNest == NO_SIGNAL && robot.minFood == NO_SIGNAL))
         wait = receiveSignal(roleDecision);
-
-
-    robot.wipingNeighborsTimer--;
-    }
+    
     if (roleDecision == NO_SWITCH)
     {
         delay(random(priority) * 10);
@@ -118,6 +122,8 @@ bool GuiderRole::receiveSignal(int& roleDecision)
     {
         
         robot.formNeighborhood();
+
+        
         if (robot.countNeighbors() >= 3)
         {
           
@@ -137,6 +143,7 @@ bool GuiderRole::receiveSignal(int& roleDecision)
             recalculation = false;
             robot.wipingNeighborsTimer = NEIGHBORS_COLLECTION_TIME_GUID;
         }
+        
         robot.wipeNeighbors();
         //Serial.println("-----------------------------------------");
     }

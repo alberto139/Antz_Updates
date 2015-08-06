@@ -31,7 +31,8 @@ int WorkerRole::makeStep()
     minNumber = 0xFFFFFFFF;
     int roleDecision = NO_SWITCH;
     //sendSignal(); -- for now workers do not send any signal
-    for(int i=0;i<5;i++)
+    
+    for(int i=0;i<5;i++) // commented out for statinary demo
         receiveSignal(roleDecision);
 
     if (roleDecision == NO_SWITCH)
@@ -126,27 +127,61 @@ void WorkerRole::makeMovement()
 {
     switch (signalIndex)
     {
-        case IDX_FRONT:
-            if (!robot.blocked())
-                robot.goForward(400);
-            else
-                robot.evasiveAction();
+          case IDX_FRONT:
+            robot.turnLeft(60);
             break;
         case IDX_REAR:
             robot.turnLeft(180);
             break;
         case IDX_LFRONT:
-            robot.turnLeft(60);
+            robot.turnLeft(120);
             break;
         case IDX_LREAR:
             robot.turnLeft(120);
             break;
         case IDX_RFRONT:
-            robot.turnRight(60);
+             if (!robot.blocked())
+            {
+                robot.goForward(200);
+                if (!robot.blocked())
+                  robot.goForward(200);
+                else
+                  robot.evasiveAction();
+            }
+            else
+                robot.evasiveAction();
             break;
         case IDX_RREAR:
-            robot.turnRight(120);
+            robot.turnRight(60);
             break;
+      
+//        case IDX_FRONT:
+//            if (!robot.blocked())
+//            {
+//                robot.goForward(200);
+//                if (!robot.blocked())
+//                  robot.goForward(200);
+//                else
+//                  robot.evasiveAction();
+//            }
+//            else
+//                robot.evasiveAction();
+//            break;
+//        case IDX_REAR:
+//            robot.turnLeft(180);
+//            break;
+//        case IDX_LFRONT:
+//            robot.turnLeft(60);
+//            break;
+//        case IDX_LREAR:
+//            robot.turnLeft(120);
+//            break;
+//        case IDX_RFRONT:
+//            robot.turnRight(60);
+//            break;
+//        case IDX_RREAR:
+//            robot.turnRight(120);
+//            break;
     }
 }
 
@@ -183,10 +218,17 @@ void WorkerRole::randomWalkGo()
             }
             if (randomCircleCnt-- > 0)
             {
-                if (!robot.blocked())			// if there is no obstacle
-                    robot.goForward(400);
-                else
+                if (!robot.blocked())
+                {
+                  robot.goForward(200);
+                  if (!robot.blocked())
+                    robot.goForward(200);
+                  else
                     robot.evasiveAction();
+                }
+                else
+                  robot.evasiveAction();
+            
             }
             //movePhase = -1;
             break;
