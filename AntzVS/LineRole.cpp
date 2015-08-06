@@ -5,11 +5,11 @@ using namespace Antz;
 LineRole::LineRole(SmartBot& _robot)
 : Role(_robot),
 target(TARGET_NEST),
-curNumber(0xFFFFFFFF),
+curNumber(0x00),
 numberTimer(0),
 maxSignal(0xFF),
 signalIndex(6),
-maxNumber(0xFFFFFFFF),
+maxNumber(0x00),
 randomMoveTimer(0),
 movePhase(0),
 randomCircleCnt(0)
@@ -23,37 +23,28 @@ int LineRole::makeStep()
     Display& display = robot.display;
     display.goingTowardsNest(); // yellow LED is turned on when the robot starts walking from food to nest
 
-    maxSignal = NO_SIGNAL;
+    maxSignal = 0;
     signalIndex = 6;
-    maxNumber = 0xFFFFFFFF;
+    maxNumber = 0;
     int roleDecision = NO_SWITCH;
     //sendSignal(); -- for now workers do not send any signal
 
-    for (int i = 0; i<5; i++)
+    for (int i = 0; i<10; i++)
         receiveSignal(roleDecision);
 
     if (roleDecision == NO_SWITCH)
     {
         uint8_t cur = curNumber;
 
-        if (maxSignal != NO_SIGNAL && maxSignal >= cur)
+        if (maxSignal != 0 && maxSignal >= cur)
         {
             display.number(true, maxSignal);
             curNumber = maxNumber;
             numberTimer = millis();
             makeMovement();
-            randomWalkReset();
             noMoveCnt = 0;
         }
-        else if (curNumber == 0xFFFFFFFF)
-        {
-            if (millis() - randomMoveTimer > 1000)
-            {
-
-                randomWalkGo();
-                randomMoveTimer = millis();
-            }
-        }
+        
     }
 
     return roleDecision;
@@ -64,7 +55,7 @@ bool LineRole::receiveSignal(int& roleDecision)
 {
     if (millis() - numberTimer > 5000)
     {
-        curNumber = 0xFFFFFFFF;
+        curNumber = 0;
         numberTimer = millis();
     }
     bool received = false;
@@ -105,8 +96,9 @@ bool LineRole::receiveSignal(int& roleDecision)
         robot.formNeighborhood();
         if (robot.countNeighbors() == 0)
         {
-            robot.turnLeft(180);
-            robot.goForward(200);
+            robot.turnLeft(180,false);
+            delay(500);
+            robot.goForward(400,false);
             roleDecision = SWITCH_ROLE;
         }
 
@@ -125,8 +117,13 @@ void LineRole::makeMovement()
     switch (signalIndex)
     {
     case IDX_FRONT:
-        robot.turnLeft(60);
+        //robot.turnLeft(60);
+        if (!robot.blocked())
+            robot.goForward(400);
+        else
+            robot.evasiveAction();
         break;
+        
     case IDX_REAR:
         if (!robot.blocked())
             robot.goForward(400);
@@ -140,9 +137,10 @@ void LineRole::makeMovement()
             robot.evasiveAction();
         break;
     case IDX_LREAR:
-        robot.turnLeft(90);
-        robot.goForward(800);
-        robot.turnRight(90);
+        robot.goForward(100, false);
+        robot.turnLeft(90, false);
+        robot.goForward(800, false);
+        robot.turnRight(90, false);
         break;
     case IDX_RFRONT:
         if (!robot.blocked())
@@ -152,61 +150,12 @@ void LineRole::makeMovement()
         break;
         break;
     case IDX_RREAR:
-        robot.turnRight(90);
-        robot.goForward(800);
-        robot.turnLeft(90);
+        robot.goForward(100, false);
+        robot.turnRight(90, false);
+        robot.goForward(800, false);
+        robot.turnLeft(90, false);
         break;
     }
 }
 
-/* randomWalkReset -- reset random walk state */
-void LineRole::randomWalkReset()
-{
-    movePhase = 0;
-}
 
-/* randomWalkGo -- make one random movement */
-void LineRole::randomWalkGo()
-{
-    switch (movePhase)
-    {
-    case 0:
-        robot.turnLeft(30);
-        break;
-    case 1:
-        robot.turnRight(30);
-        break;
-    case 2:
-        robot.turnRight(60, false);
-        if (!robot.blocked())				// if there is no obstacle
-            robot.goForward(400);
-        else
-            robot.evasiveAction();
-        break;
-    default:
-
-        if (randomCircleCnt == 0)
-        {
-            robot.turnLeft(60, false);
-            randomCircleCnt = movePhase;
-        }
-        if (randomCircleCnt-- > 0)
-        {
-            if (!robot.blocked())
-            {
-                robot.goForward(200);
-                if (!robot.blocked())
-                    robot.goForward(200);
-                else
-                    robot.evasiveAction();
-            }
-            else
-                robot.evasiveAction();
-
-        }
-        //movePhase = -1;
-        break;
-    }
-    if (randomCircleCnt == 0)
-        movePhase++;
-}
