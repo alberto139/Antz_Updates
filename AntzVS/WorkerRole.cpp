@@ -140,6 +140,13 @@ void WorkerRole::makeMovement()
             robot.turnLeft(120);
             break;
         case IDX_RFRONT:
+            // ---
+            robot.turnRight(60);
+            float angle;
+            while (robot.scanner.scan(&angle) > 40)
+                robot.goForward(200);
+            robot.turnLeft(60);
+            // --- END
              if (!robot.blocked())
             {
                 robot.goForward(200);

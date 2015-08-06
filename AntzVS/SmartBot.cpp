@@ -11,6 +11,7 @@
 #include "Role.h"
 #include "WorkerRole.h"
 #include "GuiderRole.h"
+#include "LineRole.h"
 
 using namespace Antz;
 
@@ -21,7 +22,7 @@ SmartBot::SmartBot(uint32_t robotId):
     curNest(NO_SIGNAL)
 {
     //robotRole = new GuiderRole(*this);
-    robotRole = new WorkerRole(*this);
+    robotRole = new WorkerRole(*this);//robotRole = new LineRole(*this); //new WorkerRole(*this); ------ CHANGE ------
     seenRobots = new Dll();
 }
 
@@ -53,7 +54,7 @@ void SmartBot::switchRole()
     if (roleId == ROLE_WORKER)
         robotRole = new GuiderRole(*this);
     else
-        robotRole = new WorkerRole(*this);
+        robotRole = new WorkerRole(*this);//robotRole = new LineRole(*this); //new WorkerRole(*this); ------ CHANGE ------
 }
 
 void SmartBot::wipeNeighbors()
