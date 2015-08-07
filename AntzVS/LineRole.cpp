@@ -98,7 +98,9 @@ bool LineRole::receiveSignal(int& roleDecision)
         {
             robot.turnLeft(180,false);
             delay(500);
-            robot.goForward(400,false);
+            robot.goForward(550,false);
+            delay(500);
+            robot.turnRight(25,false);
             roleDecision = SWITCH_ROLE;
         }
 
@@ -117,45 +119,46 @@ void LineRole::makeMovement()
     switch (signalIndex)
     {
     case IDX_FRONT:
-        //robot.turnLeft(60);
-        if (!robot.blocked())
-            robot.goForward(400);
-        else
-            robot.evasiveAction();
+        forwardStep();
         break;
-        
     case IDX_REAR:
-        if (!robot.blocked())
-            robot.goForward(400);
-        else
-            robot.evasiveAction();
+        forwardStep();
         break;
     case IDX_LFRONT:
-        if (!robot.blocked())
-            robot.goForward(400);
-        else
-            robot.evasiveAction();
+        forwardStep();
         break;
     case IDX_LREAR:
-        robot.goForward(100, false);
+        robot.goForward(300, false);
         robot.turnLeft(90, false);
         robot.goForward(800, false);
         robot.turnRight(90, false);
         break;
     case IDX_RFRONT:
-        if (!robot.blocked())
-            robot.goForward(400);
-        else
-            robot.evasiveAction();
-        break;
+        forwardStep();
         break;
     case IDX_RREAR:
-        robot.goForward(100, false);
+        robot.goForward(300, false);
         robot.turnRight(90, false);
         robot.goForward(800, false);
         robot.turnLeft(90, false);
         break;
     }
 }
+
+void LineRole::forwardStep()
+{
+ if (!robot.blocked())
+        {
+            robot.turnRight(4,false);
+            delay(100);
+            robot.goForward(400,false);
+        }  
+        else
+            robot.evasiveAction(); 
+}
+
+
+
+
 
 

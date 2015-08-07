@@ -40,10 +40,10 @@ void Tester::loop() {
 
 //test turns
 
-turnLeft(180, false);
-delay(1000);
-goForward(200, false);
-delay(5000);
+
+goForward(500,false);
+delay(3000);
+goBackward(500,false);
 
   
 //  //test distances

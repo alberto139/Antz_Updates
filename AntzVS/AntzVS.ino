@@ -27,14 +27,14 @@
 #include "Display.h"
 #include "AntzRobot.h"
 
-#define ID ((uint32_t)3) //change from 32 to 16
+#define ID ((uint32_t)2) //change from 32 to 16
 
 //Display AntzRobot::display;
 
 using namespace Antz;
 
 /* Create a Worker ant */
-AntzRobot *antz = AntzRobot::createAntzRobot("SmartBot", ID);
+AntzRobot *antz = AntzRobot::createAntzRobot("Tester", ID);
 
 /*
  * setup - constructor of the sketch

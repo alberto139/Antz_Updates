@@ -36,6 +36,7 @@ namespace Antz
         void makeMovement();
         void randomWalkGo();
         void randomWalkReset();
+        void forwardStep();
 
 
         // Maybe we should change the variable names below
