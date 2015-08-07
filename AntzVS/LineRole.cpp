@@ -24,22 +24,29 @@ int LineRole::makeStep()
     display.goingTowardsNest(); // yellow LED is turned on when the robot starts walking from food to nest
 
     //maxSignal = 0;
-    //signalIndex = 6;
+    signalIndex = 6;
     //maxNumber = 0;
     int roleDecision = NO_SWITCH;
-    //sendSignal(); -- for now workers do not send any signal
+        if (!robot.recver.canHearSignal())
+        {
+            
+            display.sendingSignal(); // when red LED turns off and green turns on, the robot starts sending the signal
+            sendSignal();
+        }
 
     for (int i = 0; i<10; i++)
         receiveSignal(roleDecision);
 
+
+
     if (roleDecision == NO_SWITCH)
     {
         //uint8_t cur = curNumber;
-
+        display.number(true, lastSeenId);
         if (lastSeenId != lastNeighbor->id)
         //if (maxSignal != 0 && maxSignal >= cur)
         {
-            display.number(true, lastSeenId);
+            
             //display.number(true, maxSignal);
             //curNumber = maxNumber;
             //numberTimer = millis();
@@ -69,7 +76,7 @@ bool LineRole::receiveSignal(int& roleDecision)
         if (robot.recver.recvFrom(idx[i], &number))
         {
             received = true;
-
+            signalIndex = idx[i];
             /*uint8_t cardinality = number;
 
             if (cardinality == 1)
@@ -151,7 +158,7 @@ void LineRole::forwardStep()
     {
         robot.turnRight(4, false);
         delay(100);
-        robot.goForward(400, false);
+        robot.goForward(300, false);
     }  
     else
         robot.evasiveAction(); 
