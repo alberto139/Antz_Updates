@@ -55,6 +55,9 @@ namespace Antz
         uint8_t noMoveCnt;
 
         int randomCircleCnt;
+
+        int lastSeenId = -1;
+        Neighbor* lastNeighbor = NULL;
     };
 }
 

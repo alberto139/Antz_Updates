@@ -23,9 +23,9 @@ int LineRole::makeStep()
     Display& display = robot.display;
     display.goingTowardsNest(); // yellow LED is turned on when the robot starts walking from food to nest
 
-    maxSignal = 0;
-    signalIndex = 6;
-    maxNumber = 0;
+    //maxSignal = 0;
+    //signalIndex = 6;
+    //maxNumber = 0;
     int roleDecision = NO_SWITCH;
     //sendSignal(); -- for now workers do not send any signal
 
@@ -34,15 +34,17 @@ int LineRole::makeStep()
 
     if (roleDecision == NO_SWITCH)
     {
-        uint8_t cur = curNumber;
+        //uint8_t cur = curNumber;
 
-        if (maxSignal != 0 && maxSignal >= cur)
+        if (lastSeenId != lastNeighbor->id)
+        //if (maxSignal != 0 && maxSignal >= cur)
         {
-            display.number(true, maxSignal);
-            curNumber = maxNumber;
-            numberTimer = millis();
+            display.number(true, lastSeenId);
+            //display.number(true, maxSignal);
+            //curNumber = maxNumber;
+            //numberTimer = millis();
             makeMovement();
-            noMoveCnt = 0;
+            //noMoveCnt = 0;
         }
         
     }
@@ -53,22 +55,22 @@ int LineRole::makeStep()
 /* receiveSignal -- receive signals from all the receivers */
 bool LineRole::receiveSignal(int& roleDecision)
 {
-    if (millis() - numberTimer > 5000)
+    /*if (millis() - numberTimer > 5000)
     {
         curNumber = 0;
         numberTimer = millis();
-    }
+    }*/
     bool received = false;
     int idx[6] = { IDX_FRONT, IDX_LFRONT, IDX_RFRONT, IDX_LREAR, IDX_RREAR, IDX_REAR };
 
-    for (int i = 0; i < 6; i++) // poll from 6 receivers
+    for (int i = 3; i < 6; i++) // poll only from 3 rear receivers
     {
         uint32_t number;
         if (robot.recver.recvFrom(idx[i], &number))
         {
             received = true;
 
-            uint8_t cardinality = number;
+            /*uint8_t cardinality = number;
 
             if (cardinality == 1)
             {
@@ -81,7 +83,7 @@ bool LineRole::receiveSignal(int& roleDecision)
                 maxSignal = cardinality;
                 signalIndex = idx[i];
                 maxNumber = number;
-            }
+            }*/
 
             Neighbor* currentN = new Neighbor(number);
             if (robot.isNeighborValid(*currentN))
@@ -96,14 +98,21 @@ bool LineRole::receiveSignal(int& roleDecision)
         robot.formNeighborhood();
         if (robot.countNeighbors() == 0)
         {
-            robot.turnLeft(180,false);
-            delay(500);
-            robot.goForward(550,false);
-            delay(500);
-            robot.turnRight(25,false);
-            roleDecision = SWITCH_ROLE;
+            lastSeenId = lastNeighbor->id;
+            delete lastNeighbor;
+            robot.goBackward(500, false);
+            roleDecision = NO_SWITCH;
         }
-
+        else
+        {
+            delete lastNeighbor;
+            for (int i = 2; i < 5; i++)
+                if (robot.neighbors[i] != NULL)
+                {
+                    lastNeighbor = robot.neighbors[i];
+                    robot.neighbors[i] = NULL;
+                }
+        }
         robot.wipingNeighborsTimer = NEIGHBORS_COLLECTION_TIME_WORK;
         robot.wipeNeighbors();
     }
@@ -119,42 +128,33 @@ void LineRole::makeMovement()
     switch (signalIndex)
     {
     case IDX_FRONT:
-        forwardStep();
         break;
     case IDX_REAR:
         forwardStep();
         break;
     case IDX_LFRONT:
-        forwardStep();
         break;
     case IDX_LREAR:
-        robot.goForward(300, false);
-        robot.turnLeft(90, false);
-        robot.goForward(800, false);
-        robot.turnRight(90, false);
-        break;
-    case IDX_RFRONT:
         forwardStep();
         break;
+    case IDX_RFRONT:
+        break;
     case IDX_RREAR:
-        robot.goForward(300, false);
-        robot.turnRight(90, false);
-        robot.goForward(800, false);
-        robot.turnLeft(90, false);
+        forwardStep();
         break;
     }
 }
 
 void LineRole::forwardStep()
 {
- if (!robot.blocked())
-        {
-            robot.turnRight(4,false);
-            delay(100);
-            robot.goForward(400,false);
-        }  
-        else
-            robot.evasiveAction(); 
+    if (!robot.blocked())
+    {
+        robot.turnRight(4, false);
+        delay(100);
+        robot.goForward(400, false);
+    }  
+    else
+        robot.evasiveAction(); 
 }
 
 
