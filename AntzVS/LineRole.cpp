@@ -31,10 +31,9 @@ int LineRole::makeStep()
 
     for (int i = 0; i<10; i++)
     {
-      if (!robot.recver.canHearSignal())
+        if (!robot.recver.canHearSignal())
         {
-            
-            display.sendingSignal(); // when red LED turns off and green turns on, the robot starts sending the signal
+            //display.sendingSignal(); // when red LED turns off and green turns on, the robot starts sending the signal
             sendSignal();
         }
         receiveSignal(roleDecision);
@@ -44,8 +43,8 @@ int LineRole::makeStep()
     if (roleDecision == NO_SWITCH)
     {
         //uint8_t cur = curNumber;
-        display.number(true, lastSeenId);
-        if (lastSeenId != lastNeighbor->id)
+        display.number(true, predecessorId);
+        if (predecessorId != lastSeenId)
         //if (maxSignal != 0 && maxSignal >= cur)
         {
             
@@ -70,15 +69,14 @@ bool LineRole::receiveSignal(int& roleDecision)
         numberTimer = millis();
     }*/
     bool received = false;
-    int idx[6] = { IDX_FRONT, IDX_LFRONT, IDX_RFRONT, IDX_LREAR, IDX_RREAR, IDX_REAR };
 
-    for (int i = 3; i < 6; i++) // poll only from 3 rear receivers
+    for (int i = 2; i < 5; i++) // poll only from 3 rear receivers
     {
         uint32_t number;
-        if (robot.recver.recvFrom(idx[i], &number))
+        if (robot.recver.recvFrom(i, &number))
         {
             received = true;
-            signalIndex = idx[i];
+            signalIndex = i;
             /*uint8_t cardinality = number;
 
             if (cardinality == 1)
@@ -107,20 +105,15 @@ bool LineRole::receiveSignal(int& roleDecision)
         robot.formNeighborhood();
         if (robot.countNeighbors() == 0)
         {
-            lastSeenId = lastNeighbor->id;
-            delete lastNeighbor;
+            predecessorId = lastSeenId;
             robot.goBackward(500, false);
             roleDecision = NO_SWITCH;
         }
         else
         {
-            delete lastNeighbor;
             for (int i = 2; i < 5; i++)
                 if (robot.neighbors[i] != NULL)
-                {
-                    lastNeighbor = robot.neighbors[i];
-                    robot.neighbors[i] = NULL;
-                }
+                    lastSeenId = robot.neighbors[i]->id;
         }
         robot.wipingNeighborsTimer = NEIGHBORS_COLLECTION_TIME_WORK;
         robot.wipeNeighbors();

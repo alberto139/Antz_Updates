@@ -56,8 +56,8 @@ namespace Antz
 
         int randomCircleCnt;
 
+        int predecessorId = -1;
         int lastSeenId = -1;
-        Neighbor* lastNeighbor = NULL;
     };
 }
 
