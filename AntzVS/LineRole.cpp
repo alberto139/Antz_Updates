@@ -22,41 +22,29 @@ recalculation(false)
 int LineRole::makeStep()
 {
     Display& display = robot.display;
-    display.goingTowardsNest(); // yellow LED is turned on when the robot starts walking from food to nest
+    //display.goingTowardsNest(); // yellow LED is turned on when the robot starts walking from food to nest
 
-    //maxSignal = 0;
     signalIndex = 6;
-    //maxNumber = 0;
     int roleDecision = NO_SWITCH;
     bool wait = true;
+    display.listeningForSignals();
     while (wait)
         wait = receiveSignal(roleDecision);      
-  
-    
-        if (!robot.recver.canHearSignal())
-        {
-            //display.sendingSignal(); // when red LED turns off and green turns on, the robot starts sending the signal
-            sendSignal();
-        }
-       // receiveSignal(roleDecision);
- 
+    robot.wipingNeighborsTimer--;
 
-
-    if (roleDecision == NO_SWITCH && robot.wipingNeighborsTimer == 0)
+    if (!robot.recver.canHearSignal())
     {
-        //uint8_t cur = curNumber;
+        display.sendingSignal(); // when red LED turns off and green turns on, the robot starts sending the signal
+        sendSignal();
+    }
+ 
+    if (robot.wipingNeighborsTimer == 0)
+    {
         //display.number(true, predecessorId);
         robot.wipingNeighborsTimer = NEIGHBORS_COLLECTION_TIME_WORK;
+        robot.minNest = NO_SIGNAL;
         if (predecessorId != lastSeenId)
-        //if (maxSignal != 0 && maxSignal >= cur)
-        {
-            
-            //display.number(true, maxSignal);
-            //curNumber = maxNumber;
-            //numberTimer = millis();
             makeMovement();
-            //noMoveCnt = 0;
-        }
         
     }
 
@@ -66,11 +54,11 @@ int LineRole::makeStep()
 /* receiveSignal -- receive signals from all the receivers */
 bool LineRole::receiveSignal(int& roleDecision)
 {
-    /*if (millis() - numberTimer > 5000)
+    if (millis() - numberTimer > 5000)
     {
-        curNumber = 0;
+        robot.curNest = NO_SIGNAL;
         numberTimer = millis();
-    }*/
+    }
     bool received = false;
 
     for (int i = 2; i < 5; i++) // poll only from 3 rear receivers
@@ -80,23 +68,6 @@ bool LineRole::receiveSignal(int& roleDecision)
         {
             received = true;
             signalIndex = i;
-            
-//            uint8_t cardinality = number;
-//
-//            if (cardinality == 1)
-//            {
-//                target = 1 - target;
-//                received = false;
-//                break;
-//            }
-//            else if (cardinality > 0 && cardinality < maxSignal)
-//            {
-//                maxSignal = cardinality;
-//                signalIndex = idx[i];
-//                maxNumber = number;
-//            }
-
-                    
 
             Neighbor* currentN = new Neighbor(number);
             if (robot.isNeighborValid(*currentN))
@@ -108,7 +79,6 @@ bool LineRole::receiveSignal(int& roleDecision)
                 delete currentN;
         }
     }
-    robot.curNest = robot.minNest + 1;
 
     if (robot.wipingNeighborsTimer == 0)
     {
@@ -118,29 +88,23 @@ bool LineRole::receiveSignal(int& roleDecision)
             predecessorId = lastSeenId;
             
             if(recalculation)
-            {
-            robot.goBackward(500, false);
-            roleDecision = NO_SWITCH;
-            recalculation = false;
-            }
-            else
-              recalculation = true;
+                robot.goBackward(500, false);
+            recalculation = !recalculation;
         }
         else
         {
-            for (int i = 2; i < 5; i++)
-                if (robot.neighbors[i] != NULL)
-                    lastSeenId = robot.minNest;
-                recalculation = false;
+            lastSeenId = robot.minNest;
+            recalculation = false;
         }
-        
         robot.wipeNeighbors();
     }
 
-    robot.wipingNeighborsTimer--;
+    if (robot.minNest != NO_SIGNAL && robot.minNest + 1 <= robot.curNest)
+    {
+        robot.curNest = robot.minNest + 1;
+        numberTimer = millis();
+    }
 
-
-    
     return received;
 }
 
