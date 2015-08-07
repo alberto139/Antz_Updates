@@ -27,16 +27,18 @@ int LineRole::makeStep()
     signalIndex = 6;
     //maxNumber = 0;
     int roleDecision = NO_SWITCH;
-        if (!robot.recver.canHearSignal())
+        
+
+    for (int i = 0; i<10; i++)
+    {
+      if (!robot.recver.canHearSignal())
         {
             
             display.sendingSignal(); // when red LED turns off and green turns on, the robot starts sending the signal
             sendSignal();
         }
-
-    for (int i = 0; i<10; i++)
         receiveSignal(roleDecision);
-
+    }
 
 
     if (roleDecision == NO_SWITCH)
