@@ -28,23 +28,25 @@ int LineRole::makeStep()
     signalIndex = 6;
     //maxNumber = 0;
     int roleDecision = NO_SWITCH;
-        
-
-    for (int i = 0; i<10; i++)
-    {
-        if (!robot.recver.canHearSignal() && (i%2 == 0))
+    bool wait = true;
+    while (wait)
+        wait = receiveSignal(roleDecision);      
+  
+    
+        if (!robot.recver.canHearSignal())
         {
             //display.sendingSignal(); // when red LED turns off and green turns on, the robot starts sending the signal
             sendSignal();
         }
-        receiveSignal(roleDecision);
-    }
+       // receiveSignal(roleDecision);
+ 
 
 
-    if (roleDecision == NO_SWITCH)
+    if (roleDecision == NO_SWITCH && robot.wipingNeighborsTimer == 0)
     {
         //uint8_t cur = curNumber;
-        display.number(true, predecessorId);
+        //display.number(true, predecessorId);
+        robot.wipingNeighborsTimer = NEIGHBORS_COLLECTION_TIME_WORK;
         if (predecessorId != lastSeenId)
         //if (maxSignal != 0 && maxSignal >= cur)
         {
@@ -78,28 +80,35 @@ bool LineRole::receiveSignal(int& roleDecision)
         {
             received = true;
             signalIndex = i;
-            /*uint8_t cardinality = number;
+            
+//            uint8_t cardinality = number;
+//
+//            if (cardinality == 1)
+//            {
+//                target = 1 - target;
+//                received = false;
+//                break;
+//            }
+//            else if (cardinality > 0 && cardinality < maxSignal)
+//            {
+//                maxSignal = cardinality;
+//                signalIndex = idx[i];
+//                maxNumber = number;
+//            }
 
-            if (cardinality == 1)
-            {
-                target = 1 - target;
-                received = false;
-                break;
-            }
-            else if (cardinality > 0 && cardinality > maxSignal)
-            {
-                maxSignal = cardinality;
-                signalIndex = idx[i];
-                maxNumber = number;
-            }*/
+                    
 
             Neighbor* currentN = new Neighbor(number);
             if (robot.isNeighborValid(*currentN))
+            {
                 robot.registerRobotSignal(*currentN, i);
+                robot.minNest = min(currentN->curNest, robot.minNest);
+            }
             else
                 delete currentN;
         }
     }
+    robot.curNest = robot.minNest + 1;
 
     if (robot.wipingNeighborsTimer == 0)
     {
@@ -112,22 +121,26 @@ bool LineRole::receiveSignal(int& roleDecision)
             {
             robot.goBackward(500, false);
             roleDecision = NO_SWITCH;
+            recalculation = false;
             }
-            recalculation = true;
+            else
+              recalculation = true;
         }
         else
         {
             for (int i = 2; i < 5; i++)
                 if (robot.neighbors[i] != NULL)
-                    lastSeenId = robot.neighbors[i]->id;
+                    lastSeenId = robot.minNest;
                 recalculation = false;
         }
-        robot.wipingNeighborsTimer = NEIGHBORS_COLLECTION_TIME_WORK;
+        
         robot.wipeNeighbors();
     }
 
     robot.wipingNeighborsTimer--;
 
+
+    
     return received;
 }
 
