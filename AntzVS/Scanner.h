@@ -12,8 +12,8 @@
 #define IR_PIN A15
 #define SERVO_PIN     53
 #define SERVO_SPD     (120.f / 60.f) // per degree
-#define MIN_POS       45.f  //15.f // !!!! FOR LINE ROLE ONLY !!!!!!
-#define MAX_POS       135.f  //165.f // !!!! FOR LINE ROLE ONLY !!!!!!
+#define MIN_POS       15.f 
+#define MAX_POS       165.f
 #define NUM_OF_STOPS  3 // changed from 5
 #define INTERVAL      ((MAX_POS - MIN_POS) / (NUM_OF_STOPS - 1))
 

@@ -58,6 +58,7 @@ namespace Antz
 
         int predecessorId = -1;
         int lastSeenId = -1;
+        bool recalculation;
     };
 }
 

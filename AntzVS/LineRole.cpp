@@ -12,7 +12,8 @@ signalIndex(6),
 maxNumber(0x00),
 randomMoveTimer(0),
 movePhase(0),
-randomCircleCnt(0)
+randomCircleCnt(0),
+recalculation(false)
 
 {
     robot.wipingNeighborsTimer = NEIGHBORS_COLLECTION_TIME_WORK;
@@ -31,7 +32,7 @@ int LineRole::makeStep()
 
     for (int i = 0; i<10; i++)
     {
-        if (!robot.recver.canHearSignal())
+        if (!robot.recver.canHearSignal() && (i%2 == 0))
         {
             //display.sendingSignal(); // when red LED turns off and green turns on, the robot starts sending the signal
             sendSignal();
@@ -106,14 +107,20 @@ bool LineRole::receiveSignal(int& roleDecision)
         if (robot.countNeighbors() == 0)
         {
             predecessorId = lastSeenId;
+            
+            if(recalculation)
+            {
             robot.goBackward(500, false);
             roleDecision = NO_SWITCH;
+            }
+            recalculation = true;
         }
         else
         {
             for (int i = 2; i < 5; i++)
                 if (robot.neighbors[i] != NULL)
                     lastSeenId = robot.neighbors[i]->id;
+                recalculation = false;
         }
         robot.wipingNeighborsTimer = NEIGHBORS_COLLECTION_TIME_WORK;
         robot.wipeNeighbors();
@@ -151,7 +158,7 @@ void LineRole::forwardStep()
 {
     if (!robot.blocked())
     {
-        robot.turnRight(4, false);
+        //robot.turnRight(4, false);
         delay(100);
         robot.goForward(300, false);
     }  
