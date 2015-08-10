@@ -81,7 +81,7 @@ bool LineRole::receiveSignal(int& roleDecision)
         robot.formNeighborhood();
         if (robot.countNeighbors() == 0)
         {
-            if (recalculation && lastRoleId == ROLE_GUIDER)
+            if (recalculation && (lastRoleId == ROLE_GUIDER || lastSeenNestCard == 2))
             {
                 predecessorNestCard = lastSeenNestCard;
                 robot.goBackward(500, false);
