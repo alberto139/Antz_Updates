@@ -30,34 +30,17 @@ namespace Antz
         int makeStep();
 
     protected:
-
         bool receiveSignal(int& roleDecision);
 
         void makeMovement();
-        void randomWalkGo();
-        void randomWalkReset();
         void forwardStep();
 
-
-        // Maybe we should change the variable names below
-
-        uint64_t randomMoveTimer;
         uint8_t target;
-        uint32_t curNumber;
         uint64_t numberTimer;
-        uint8_t maxSignal;
         uint8_t signalIndex;
-        uint32_t maxNumber;
 
-        uint8_t foodIndex;
-        uint8_t nestIndex;
-        uint16_t movePhase;
-        uint8_t noMoveCnt;
-
-        int randomCircleCnt;
-
-        int predecessorId = -1;
-        int lastSeenId = -1;
+        int predecessorNestCard;
+        int lastSeenNestCard;
         bool recalculation;
     };
 }

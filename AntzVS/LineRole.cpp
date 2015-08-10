@@ -5,14 +5,10 @@ using namespace Antz;
 LineRole::LineRole(SmartBot& _robot)
 : Role(_robot),
 target(TARGET_NEST),
-curNumber(0x00),
 numberTimer(0),
-maxSignal(0xFF),
 signalIndex(6),
-maxNumber(0x00),
-randomMoveTimer(0),
-movePhase(0),
-randomCircleCnt(0),
+predecessorNestCard(NO_SIGNAL),
+lastSeenNestCard(NO_SIGNAL),
 recalculation(false)
 
 {
@@ -21,31 +17,28 @@ recalculation(false)
 
 int LineRole::makeStep()
 {
-    Display& display = robot.display;
-    //display.goingTowardsNest(); // yellow LED is turned on when the robot starts walking from food to nest
-
-    signalIndex = 6;
     int roleDecision = NO_SWITCH;
-    bool wait = true;
-    display.listeningForSignals();
-    while (wait)
-        wait = receiveSignal(roleDecision);      
     robot.wipingNeighborsTimer--;
 
-    if (!robot.recver.canHearSignal())
+    Display& display = robot.display;
+    display.listeningForSignals(); // red on, green off
+    bool wait = true;
+    while (wait)
+        wait = receiveSignal(roleDecision);
+
+    if (!robot.recver.canHearSignal() && robot.wipingNeighborsTimer % 3 == 0)
     {
-        display.sendingSignal(); // when red LED turns off and green turns on, the robot starts sending the signal
+        display.sendingSignal(); // red off, green on
         sendSignal();
     }
- 
+    display.number(true, predecessorNestCard);
     if (robot.wipingNeighborsTimer == 0)
     {
-        //display.number(true, predecessorId);
+        if (predecessorNestCard != lastSeenNestCard)
+            makeMovement();
+        signalIndex = 6;
         robot.wipingNeighborsTimer = NEIGHBORS_COLLECTION_TIME_WORK;
         robot.minNest = NO_SIGNAL;
-        if (predecessorId != lastSeenId)
-            makeMovement();
-        
     }
 
     return roleDecision;
@@ -61,18 +54,19 @@ bool LineRole::receiveSignal(int& roleDecision)
     }
     bool received = false;
 
-    for (int i = 2; i < 5; i++) // poll only from 3 rear receivers
+    int receivers[3] = { IDX_LREAR, IDX_REAR, IDX_RREAR };
+    for (int i = 0; i < 3; i++) // poll only from 3 rear receivers
     {
         uint32_t number;
-        if (robot.recver.recvFrom(i, &number))
+        if (robot.recver.recvFrom(receivers[i], &number))
         {
             received = true;
-            signalIndex = i;
+            signalIndex = receivers[i];
 
             Neighbor* currentN = new Neighbor(number);
             if (robot.isNeighborValid(*currentN))
             {
-                robot.registerRobotSignal(*currentN, i);
+                robot.registerRobotSignal(*currentN, receivers[i]);
                 robot.minNest = min(currentN->curNest, robot.minNest);
             }
             else
@@ -82,18 +76,20 @@ bool LineRole::receiveSignal(int& roleDecision)
 
     if (robot.wipingNeighborsTimer == 0)
     {
+        received = false; // to prevent forming neighborhood again in the same iteration (see while loop in makeStep)
         robot.formNeighborhood();
         if (robot.countNeighbors() == 0)
         {
-            predecessorId = lastSeenId;
-            
-            if(recalculation)
+            if (recalculation)
+            {
+                predecessorNestCard = lastSeenNestCard;
                 robot.goBackward(500, false);
+            }
             recalculation = !recalculation;
         }
         else
         {
-            lastSeenId = robot.minNest;
+            lastSeenNestCard = robot.minNest;
             recalculation = false;
         }
         robot.wipeNeighbors();
@@ -113,21 +109,21 @@ void LineRole::makeMovement()
 {
     switch (signalIndex)
     {
-    case IDX_FRONT:
-        break;
-    case IDX_REAR:
-        forwardStep();
-        break;
-    case IDX_LFRONT:
-        break;
-    case IDX_LREAR:
-        forwardStep();
-        break;
-    case IDX_RFRONT:
-        break;
-    case IDX_RREAR:
-        forwardStep();
-        break;
+        case IDX_FRONT:
+            break;
+        case IDX_REAR:
+            forwardStep();
+            break;
+        case IDX_LFRONT:
+            break;
+        case IDX_LREAR:
+            forwardStep();
+            break;
+        case IDX_RFRONT:
+            break;
+        case IDX_RREAR:
+            forwardStep();
+            break;
     }
 }
 
@@ -136,7 +132,7 @@ void LineRole::forwardStep()
     if (!robot.blocked())
     {
         //robot.turnRight(4, false);
-        delay(100);
+        //delay(100);
         robot.goForward(300, false);
     }  
     else
