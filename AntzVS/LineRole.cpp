@@ -17,6 +17,8 @@ recalculation(false)
 
 int LineRole::makeStep()
 {
+
+  
     int roleDecision = NO_SWITCH;
     robot.wipingNeighborsTimer--;
 
@@ -62,7 +64,6 @@ bool LineRole::receiveSignal(int& roleDecision)
         {
             received = true;
             signalIndex = receivers[i];
-
             Neighbor* currentN = new Neighbor(number);
             if (robot.isNeighborValid(*currentN))
             {
