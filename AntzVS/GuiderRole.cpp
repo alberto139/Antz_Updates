@@ -72,6 +72,10 @@ while (roleDecision == NO_SWITCH && (wait || robot.minNest == NO_SIGNAL && robot
             display.number(true, robot.curFood);
             delay(100);
             display.number(true, robot.curNest);
+
+//              display.number(true, robot.minNest);
+//              delay(200);
+//              display.number(true, robot.minFood);
             /* Display self position and forward the message to other guiders and workers */
             sendSignal();
         }//test

@@ -26,7 +26,7 @@ namespace Antz
         LineRole(SmartBot& _robot);
         ~LineRole() {}
 
-        int getRoleId() { return ROLE_WORKER; };
+        int getRoleId();
         int makeStep();
 
     protected:
@@ -41,6 +41,7 @@ namespace Antz
 
         int predecessorNestCard;
         int lastSeenNestCard;
+        int lastRoleId;
         bool recalculation;
     };
 }
