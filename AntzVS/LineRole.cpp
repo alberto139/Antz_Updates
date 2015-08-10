@@ -68,7 +68,6 @@ bool LineRole::receiveSignal(int& roleDecision)
             {
                 robot.registerRobotSignal(*currentN, receivers[i]);
                 robot.minNest = min(currentN->curNest, robot.minNest);
-                lastRoleId =  currentN->role;
             }
             else
                 delete currentN;
@@ -81,7 +80,7 @@ bool LineRole::receiveSignal(int& roleDecision)
         robot.formNeighborhood();
         if (robot.countNeighbors() == 0)
         {
-            if (recalculation && (lastRoleId == ROLE_GUIDER || lastSeenNestCard == 2))
+            if (recalculation)
             {
                 predecessorNestCard = lastSeenNestCard;
                 robot.goBackward(500, false);
@@ -92,7 +91,11 @@ bool LineRole::receiveSignal(int& roleDecision)
         else
         {
             lastSeenNestCard = robot.minNest;
-            
+            bool anythingMoving = false;
+            for (int i = 0; i < 6; i++)
+                anythingMoving |= robot.neighbors[i] != NULL && robot.neighbors[i]->role == ROLE_WORKER;
+            if (anythingMoving && lastSeenNestCard > 2)
+                predecessorNestCard = NO_SIGNAL;
             recalculation = false;
             
         }
