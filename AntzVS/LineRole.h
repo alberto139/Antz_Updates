@@ -41,7 +41,6 @@ namespace Antz
 
         int predecessorNestCard;
         int lastSeenNestCard;
-        int lastRoleId;
         bool recalculation;
     };
 }
