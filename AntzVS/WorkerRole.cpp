@@ -110,13 +110,13 @@ bool WorkerRole::receiveSignal(int& roleDecision)
     if (robot.wipingNeighborsTimer == 0)
     {
         robot.formNeighborhood();
-        if (robot.countNeighbors() <= 1 && target == TARGET_FOOD) 
+        int neighborsCount = robot.countNeighbors();
+        if (neighborsCount <= 1 && target == TARGET_FOOD)
             roleDecision = SWITCH_ROLE;
-        else
+        if (neighborsCount > 1)
         {
             Neighbor* toFollow = robot.getLowestCardNeighbor(target);
-            if (toFollow != NULL)
-                signalIndex = toFollow->mostlySeenFrom();
+            signalIndex = toFollow->mostlySeenFrom();
         }
         robot.wipingNeighborsTimer = NEIGHBORS_COLLECTION_TIME_WORK;
         robot.wipeNeighbors();
