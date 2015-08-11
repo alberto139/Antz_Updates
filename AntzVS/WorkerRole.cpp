@@ -32,7 +32,7 @@ int WorkerRole::makeStep()
     int roleDecision = NO_SWITCH;
     //sendSignal(); -- for now workers do not send any signal
     
-    for(int i=0;i<5;i++) // commented out for statinary demo
+    for(int i = 0; i < NEIGHBORS_COLLECTION_TIME_WORK; i++)
         receiveSignal(roleDecision);
 
     if (roleDecision == NO_SWITCH)
@@ -91,7 +91,7 @@ bool WorkerRole::receiveSignal(int& roleDecision)
             else if (cardinality > 0 && cardinality < minSignal)
             {
                 minSignal = cardinality;
-                signalIndex = idx[i];
+                //signalIndex = idx[i];
                 minNumber = number;
             }
 
@@ -112,7 +112,12 @@ bool WorkerRole::receiveSignal(int& roleDecision)
         robot.formNeighborhood();
         if (robot.countNeighbors() <= 1 && target == TARGET_FOOD) 
             roleDecision = SWITCH_ROLE;
-
+        else
+        {
+            Neighbor* toFollow = robot.getLowestCardNeighbor(target);
+            if (toFollow != NULL)
+                signalIndex = toFollow->mostlySeenFrom();
+        }
         robot.wipingNeighborsTimer = NEIGHBORS_COLLECTION_TIME_WORK;
         robot.wipeNeighbors();
     }

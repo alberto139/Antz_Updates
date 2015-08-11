@@ -13,7 +13,7 @@
 
 #define DEFAULT_PRIORITY 50
 #define NEIGHBORS_COLLECTION_TIME_GUID 10 // number of iterations for collecting neighborhood info while being a guider
-#define NEIGHBORS_COLLECTION_TIME_WORK 10  // number of iterations for collecting neighborhood info while being a worker
+#define NEIGHBORS_COLLECTION_TIME_WORK 5  // number of iterations for collecting neighborhood info while being a worker
 
 #define NO_SIGNAL	0xFF
 
@@ -41,7 +41,7 @@ namespace Antz
         void registerRobotSignal(Neighbor& robot, int sensor);
         void formNeighborhood();
         int countNeighbors();
-        //bool isNeighborInArray(Neighbor& neighbor); // not used anymore
+        Neighbor* getLowestCardNeighbor(int currentTarget);
         bool isNeighborValid(Neighbor& neighbor);
 
         Role* robotRole;

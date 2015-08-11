@@ -41,15 +41,6 @@ namespace Antz {
     class AntzRobot {
 
     public:
-    
-      struct Node{
-       
-        
-      };
-      
-
-      void initNode(struct Node *head, Neighbor n);
-      void addNode(struct Node *head, Neighbor n);
       
 	/* Types of movements a robot can perform */
         enum MoveType {mt_forward, mt_backward, mt_left, mt_right, mt_stop, mt_unknown};

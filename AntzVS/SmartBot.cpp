@@ -169,13 +169,16 @@ int SmartBot::countNeighbors()
    
 }
 
-/*bool SmartBot::isNeighborInArray(Neighbor& neighbor)
+Neighbor* SmartBot::getLowestCardNeighbor(int currentTarget)
 {
+    Neighbor* neighbor = NULL;
     for (int i = 0; i < 6; i++)
-        if (neighbors[i] != NULL && neighbors[i]->id == neighbor.id)
-            return true;
-    return false;
-}*/ // not used anymore
+        if (neighbors[i] != NULL
+            && (currentTarget == TARGET_FOOD && neighbor->curFood > neighbors[i]->curFood 
+                || currentTarget == TARGET_NEST && neighbor->curNest > neighbors[i]->curNest))
+            neighbor = neighbors[i];
+    return neighbor;
+}
 
 bool SmartBot::isNeighborValid(Neighbor& neighbor)
 {
