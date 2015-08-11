@@ -11,7 +11,7 @@
 #ifndef __Antz__MovementTracker__
 #define __Antz__MovementTracker__
 
-#define HISTORY_LENGHT 10
+#define HISTORY_LENGTH 10
 
 namespace Antz
 {
@@ -27,9 +27,10 @@ namespace Antz
         void addMovement(Movement movement);
         Movement getLastMovement();
         Movement getMovementDecision();
+        Movement getOppMovement(Movement movement);
 
     private:
-        Movement movements[HISTORY_LENGHT];
+        Movement movements[HISTORY_LENGTH];
         int movementsCounter;
     };
 }
