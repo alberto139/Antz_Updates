@@ -9,39 +9,21 @@ MovementTracker::MovementTracker()
         movements[i] = mv_unknown;
 }
 
-
-
 void MovementTracker::addMovement(Movement movement)
 {
-  if(movementsCounter < HISTORY_LENGTH)
-    movements[movementsCounter] = movement;
-  else
-  {
-    int overrideMovement = (movementsCounter % HISTORY_LENGTH)-1;
-    if(overrideMovement >= 0)
-      movements[overrideMovement] = movement;
-    else
-       movements[HISTORY_LENGTH-1] = movement;
-  }  
+    movements[movementsCounter % HISTORY_LENGTH] = movement;
+    movementsCounter++;
 }
 
 MovementTracker::Movement MovementTracker::getLastMovement()
 {
-    Movement lastMove = mv_unknown;
-    int overrideMovement = (movementsCounter % HISTORY_LENGTH)-1;
-    if(overrideMovement >= 0)
-      lastMove = movements[overrideMovement];
-    else
-       lastMove = movements[HISTORY_LENGTH-1];
-    
-    return lastMove;
+    return movements[(movementsCounter - 1) % HISTORY_LENGTH];
   
 }
 
 MovementTracker::Movement MovementTracker::getMovementDecision()
 {
-
-  return mv_forward;
+    return mv_forward;
 }
 
 
