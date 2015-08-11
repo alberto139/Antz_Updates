@@ -41,26 +41,29 @@ MovementTracker::Movement MovementTracker::getLastMovement()
 MovementTracker::Movement MovementTracker::getMovementDecision()
 {
 
-  return mv_forward;
+  return getOppMovement(getLastMovement());
 }
 
 
 MovementTracker::Movement MovementTracker::getOppMovement(Movement movement)
 {
-
-//          enum Movement { mv_forward, mv_backward, 
-//                        mv_left_forward, mv_left_backward, 
-//                        mv_right_forward, mv_right_backward, 
-//                        mv_unknown };
   switch (movement)
     {
           case mv_forward:
             return mv_backward;
           case mv_backward:
-            return mv_forward;
-            
+            return mv_forward; 
+          case mv_left_forward:
+            return mv_right_backward;
+          case mv_left_backward:
+            return mv_right_forward;
+          case mv_right_forward:
+            return mv_left_backward;
+          case mv_right_backward:
+            return mv_left_forward;
+          default:
+            return mv_unknown; 
     }
-  
 }
 
 
