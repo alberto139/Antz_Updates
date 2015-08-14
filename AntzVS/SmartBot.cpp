@@ -21,8 +21,8 @@ SmartBot::SmartBot(uint32_t robotId):
     curFood(NO_SIGNAL),
     curNest(NO_SIGNAL)
 {
-    robotRole = new LineRole(*this); 
-    //robotRole = new WorkerRole(*this); //------ CHANGE ------
+    //robotRole = new LineRole(*this); 
+    robotRole = new WorkerRole(*this); //------ CHANGE ------
   
     //robotRole = new GuiderRole(*this);
     seenRobots = new Dll();
@@ -156,13 +156,13 @@ int SmartBot::countNeighbors()
     Serial.println(neighborCount);
     //End of Printf of Neighborhood array
 
-    if(neighborCount)
-        display.yellow(true);
-    else
-        display.yellow(false);
-    display.number(true, 1000);
-   delay(100);
-   display.number(true, neighborCount);
+//    if(neighborCount)
+//        display.yellow(true);
+//    else
+//        display.yellow(false);
+//    display.number(true, 1000);
+//   delay(100);
+//   display.number(true, neighborCount);
     
     return neighborCount;
     
@@ -174,8 +174,8 @@ Neighbor* SmartBot::getLowestCardNeighbor(int currentTarget)
     Neighbor* neighbor = NULL;
     for (int i = 0; i < 6; i++)
         if (neighbors[i] != NULL
-            && (currentTarget == TARGET_FOOD && neighbor->curFood > neighbors[i]->curFood 
-                || currentTarget == TARGET_NEST && neighbor->curNest > neighbors[i]->curNest))
+            && (currentTarget == TARGET_FOOD && (neighbor == NULL || neighbor->curFood > neighbors[i]->curFood) 
+                || currentTarget == TARGET_NEST && (neighbor == NULL || neighbor->curNest > neighbors[i]->curNest)))
             neighbor = neighbors[i];
     return neighbor;
 }

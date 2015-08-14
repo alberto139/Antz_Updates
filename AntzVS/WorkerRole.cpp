@@ -41,7 +41,8 @@ int WorkerRole::makeStep()
 
         if (minSignal != NO_SIGNAL && minSignal <= cur)
         {
-            display.number(true, minSignal);
+            //display.number(true, minSignal);
+            display.number(true,signalIndex);
             curNumber = minNumber;
             numberTimer = millis();
             makeMovement();
@@ -91,7 +92,7 @@ bool WorkerRole::receiveSignal(int& roleDecision)
             else if (cardinality > 0 && cardinality < minSignal)
             {
                 minSignal = cardinality;
-                //signalIndex = idx[i];
+                signalIndex = idx[i];
                 minNumber = number;
             }
 
@@ -100,7 +101,7 @@ bool WorkerRole::receiveSignal(int& roleDecision)
             {
                 //robot.minFood = min(currentN->curFood, robot.minFood);
                 //robot.minNest = min(currentN->curNest, robot.minNest);
-                robot.registerRobotSignal(*currentN, i);
+                robot.registerRobotSignal(*currentN, idx[i]);
             }
             else
                 delete currentN;
@@ -112,11 +113,17 @@ bool WorkerRole::receiveSignal(int& roleDecision)
         robot.formNeighborhood();
         int neighborsCount = robot.countNeighbors();
         if (neighborsCount <= 1 && target == TARGET_FOOD)
-            roleDecision = SWITCH_ROLE;
-        if (neighborsCount > 1)
+            roleDecision = NO_SWITCH;
+        if (neighborsCount >= 1)
         {
+          Display& display = robot.display;
             Neighbor* toFollow = robot.getLowestCardNeighbor(target);
-            signalIndex = toFollow->mostlySeenFrom();
+//            delay(200);
+//            display.number(false,toFollow->id);
+//            delay(300);
+//            display.number(true,toFollow->id);
+//            delay(200);
+            //signalIndex = toFollow->mostlySeenFrom();
         }
         robot.wipingNeighborsTimer = NEIGHBORS_COLLECTION_TIME_WORK;
         robot.wipeNeighbors();
