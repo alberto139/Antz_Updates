@@ -53,7 +53,7 @@ int WorkerRole::makeStep()
         {
             if (millis() - randomMoveTimer > 1000)
             {
-                
+                display.number(false,signalIndex);
                 randomWalkGo();
                 randomMoveTimer = millis();
             }
@@ -116,13 +116,8 @@ bool WorkerRole::receiveSignal(int& roleDecision)
             roleDecision = NO_SWITCH;
         if (neighborsCount >= 1)
         {
-          Display& display = robot.display;
+         
             Neighbor* toFollow = robot.getLowestCardNeighbor(target);
-//            delay(200);
-//            display.number(false,toFollow->id);
-//            delay(300);
-//            display.number(true,toFollow->id);
-//            delay(200);
             //signalIndex = toFollow->mostlySeenFrom();
         }
         robot.wipingNeighborsTimer = NEIGHBORS_COLLECTION_TIME_WORK;
@@ -140,30 +135,31 @@ void WorkerRole::makeMovement()
     switch (signalIndex)
     {
           case IDX_FRONT:
-            robot.turnLeft(60);
+            robot.turnLeft(40);
             break;
         case IDX_REAR:
             robot.turnLeft(180);
             break;
         case IDX_LFRONT:
-            robot.turnLeft(120);
+            //robot.turnLeft(120);
+            robot.turnLeft(60);
             break;
         case IDX_LREAR:
             robot.turnLeft(120);
             break;
         case IDX_RFRONT:
             // ---
-            robot.turnRight(60);
+            robot.turnRight(60,false);
             float angle;
-            while (robot.scanner.scan(&angle) > 40)
-                robot.goForward(200);
-            robot.turnLeft(60);
+            while (robot.scanner.scan(&angle) > 25)
+                robot.goForward(200,false);
+            robot.turnLeft(60,false);
             // --- END
              if (!robot.blocked())
             {
-                robot.goForward(200);
+                robot.goForward(200,false);
                 if (!robot.blocked())
-                  robot.goForward(200);
+                  robot.goForward(200,false);
                 else
                   robot.evasiveAction();
             }
@@ -232,7 +228,7 @@ void WorkerRole::randomWalkGo()
             
             if(randomCircleCnt == 0)
             {
-                robot.turnLeft(60, false);
+                robot.turnRight(60, false);
                 randomCircleCnt = movePhase;
             }
             if (randomCircleCnt-- > 0)
