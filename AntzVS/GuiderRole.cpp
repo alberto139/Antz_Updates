@@ -22,7 +22,7 @@ void GuiderRole::makeTurn()
 int GuiderRole::makeStep()
 {
     if(robot.wipingNeighborsTimer % 3 == 0)
-        makeTurn();
+        //makeTurn();
 
   
 //    Reposcount ++;
@@ -41,16 +41,16 @@ int GuiderRole::makeStep()
     bool wait = true;	// a flag indicating whether there're more signals to be heard
     int roleDecision = NO_SWITCH;
     /* keep looping until message is heard */
-// Commented out to act as stationarly beacon with no role changes **********
+ //Commented out to act as stationarly beacon with no role changes **********
 //    if(robot.curFood == NO_SIGNAL) //if the food is seen, only send signal
 //    {
-//    while (roleDecision == NO_SWITCH && (wait || robot.minNest == NO_SIGNAL && robot.minFood == NO_SIGNAL))
-//        wait = receiveSignal(roleDecision);
-//
-//
-//    robot.wipingNeighborsTimer--;
-//    }
+    while (roleDecision == NO_SWITCH && (wait || robot.minNest == NO_SIGNAL && robot.minFood == NO_SIGNAL))
+        wait = receiveSignal(roleDecision);
 
+
+  robot.wipingNeighborsTimer--;
+    //}
+/////////
 while (roleDecision == NO_SWITCH && (wait || robot.minNest == NO_SIGNAL && robot.minFood == NO_SIGNAL))
         wait = receiveSignal(roleDecision);
     
@@ -69,9 +69,9 @@ while (roleDecision == NO_SWITCH && (wait || robot.minNest == NO_SIGNAL && robot
             * from food whereas the number which appears for a very short time is the
             * number from nest
             */
-            display.number(true, robot.curFood);
-            delay(100);
-            display.number(true, robot.curNest);
+//            display.number(true, robot.curFood);  //'/cardinality !!!!!!!!
+//            delay(100);
+//            display.number(true, robot.curNest);
 
 //              display.number(true, robot.minNest);
 //              delay(200);
@@ -100,6 +100,8 @@ bool GuiderRole::receiveSignal(int& roleDecision)
     {
         if (robot.recver.canHearSignal(i))
         {
+                  Serial.print("Receiving from sensor : ");
+        Serial.println(i);
             received = true;
             uint32_t receivedSignal; // to store the 32-bit signal 
             if (robot.recver.recvFrom(i, &receivedSignal))
@@ -126,7 +128,8 @@ bool GuiderRole::receiveSignal(int& roleDecision)
     {
         
         robot.formNeighborhood();
-
+        Display& display = robot.display;
+        display.number(true, robot.countNeighbors());
         
         if (robot.countNeighbors() >= 3)
         {

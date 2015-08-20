@@ -45,7 +45,7 @@ int WorkerRole::makeStep()
             display.number(true,signalIndex);
             curNumber = minNumber;
             numberTimer = millis();
-            makeMovement();
+            makeMovement(); //**************** <---
             randomWalkReset();
             noMoveCnt = 0;
         }
@@ -54,7 +54,7 @@ int WorkerRole::makeStep()
             if (millis() - randomMoveTimer > 1000)
             {
                 display.number(false,signalIndex);
-                randomWalkGo();
+                randomWalkGo();//**************** <---
                 randomMoveTimer = millis();
             }
         }
@@ -77,6 +77,10 @@ bool WorkerRole::receiveSignal(int& roleDecision)
     for (int i = 0; i < 6; i++) // poll from 6 receivers
     {
         uint32_t number;
+       if (robot.recver.canHearSignal(idx[i]))
+        {
+        Serial.print("Receiving from sensor : ");
+        Serial.println(idx[i]);
         if (robot.recver.recvFrom(idx[i], &number))
         {
             received = true;
@@ -94,6 +98,7 @@ bool WorkerRole::receiveSignal(int& roleDecision)
                 minSignal = cardinality;
                 signalIndex = idx[i];
                 minNumber = number;
+                
             }
 
             Neighbor* currentN = new Neighbor(number);
@@ -106,6 +111,7 @@ bool WorkerRole::receiveSignal(int& roleDecision)
             else
                 delete currentN;
         }
+        }
     }
 
     if (robot.wipingNeighborsTimer == 0)
@@ -113,7 +119,10 @@ bool WorkerRole::receiveSignal(int& roleDecision)
         robot.formNeighborhood();
         int neighborsCount = robot.countNeighbors();
         if (neighborsCount <= 1 && target == TARGET_FOOD)
+        {
+          Serial.println("role descision");
             roleDecision = NO_SWITCH;
+        }
         if (neighborsCount >= 1)
         {
          

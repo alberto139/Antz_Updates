@@ -85,9 +85,10 @@ bool Receiver::getData(volatile RecvState &recver, uint32_t *value) {
             recver.bit = 0;
             
             recver.counter = 0;
+            Serial.println("Signal is recieved -- correctly");
             return true;
         }
-    } while (micros() - start < LEN_PRSV * 5);
+    } while (micros() - start < LEN_PRSV * 10); ///changed+++++
     EIMSK &= ~(1 << recver.INTn); // disable interrupt for the receiver
     
     if (++recver.counter > RESET_THR) {
@@ -96,6 +97,7 @@ bool Receiver::getData(volatile RecvState &recver, uint32_t *value) {
         digitalWrite(POWER, HIGH);
         recver.counter = 0;
     }
+    Serial.println("Signal is recieved -- Incorectly");
     return false;
 }
 

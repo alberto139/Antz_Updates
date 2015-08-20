@@ -14,6 +14,7 @@
 #define DEFAULT_PRIORITY 50
 #define NEIGHBORS_COLLECTION_TIME_GUID 10 // number of iterations for collecting neighborhood info while being a guider
 #define NEIGHBORS_COLLECTION_TIME_WORK 6  // number of iterations for collecting neighborhood info while being a worker
+#define NEIGHBORS_COLLECTION_TIME_LINE 15
 
 #define NO_SIGNAL	0xFF
 

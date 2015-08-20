@@ -39,7 +39,7 @@ int LineRole::makeStep()
         if (predecessorNestCard != lastSeenNestCard)
             makeMovement();
         signalIndex = 6;
-        robot.wipingNeighborsTimer = NEIGHBORS_COLLECTION_TIME_WORK;
+        robot.wipingNeighborsTimer = NEIGHBORS_COLLECTION_TIME_LINE;
         robot.minNest = NO_SIGNAL;
     }
 
@@ -59,6 +59,7 @@ bool LineRole::receiveSignal(int& roleDecision)
     int receivers[3] = { IDX_LREAR, IDX_REAR, IDX_RREAR };
     for (int i = 0; i < 3; i++) // poll only from 3 rear receivers
     {
+      
         uint32_t number;
         if (robot.recver.recvFrom(receivers[i], &number))
         {
@@ -73,6 +74,7 @@ bool LineRole::receiveSignal(int& roleDecision)
             else
                 delete currentN;
         }
+        
     }
 
     if (robot.wipingNeighborsTimer == 0)

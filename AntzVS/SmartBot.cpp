@@ -21,8 +21,8 @@ SmartBot::SmartBot(uint32_t robotId):
     curFood(NO_SIGNAL),
     curNest(NO_SIGNAL)
 {
-    //robotRole = new LineRole(*this); 
-    robotRole = new WorkerRole(*this); //------ CHANGE ------
+    robotRole = new LineRole(*this); 
+    //robotRole = new WorkerRole(*this); //------ CHANGE ------
   
     //robotRole = new GuiderRole(*this);
     seenRobots = new Dll();
