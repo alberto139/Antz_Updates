@@ -174,8 +174,8 @@ Neighbor* SmartBot::getLowestCardNeighbor(int currentTarget, int* direction)
     Neighbor* neighbor = NULL;
     for (int i = 0; i < 6; i++)
         if (neighbors[i] != NULL
-            && (currentTarget == TARGET_FOOD && (neighbor == NULL || neighbor->curFood > neighbors[i]->curFood) 
-                || currentTarget == TARGET_NEST && (neighbor == NULL || neighbor->curNest > neighbors[i]->curNest)))
+            && (currentTarget == TARGET_FOOD && (neighbor == NULL && neighbors[i]->curFood != NO_SIGNAL || neighbor->curFood > neighbors[i]->curFood) 
+                || currentTarget == TARGET_NEST && (neighbor == NULL && neighbors[i]->curNest != NO_SIGNAL || neighbor->curNest > neighbors[i]->curNest)))
             {
                 neighbor = neighbors[i];
                 if(direction)
