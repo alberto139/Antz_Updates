@@ -42,7 +42,7 @@ namespace Antz
         void registerRobotSignal(Neighbor& robot, int sensor);
         void formNeighborhood();
         int countNeighbors();
-        Neighbor* getLowestCardNeighbor(int currentTarget);
+        Neighbor* getLowestCardNeighbor(int currentTarget, int* direction = 0);
         bool isNeighborValid(Neighbor& neighbor);
 
         Role* robotRole;

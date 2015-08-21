@@ -13,6 +13,9 @@
 
 #include "SmartBot.h"
 
+#define TARGET_NEST 0
+#define TARGET_FOOD 1
+
 #define ROLE_WORKER 0
 #define ROLE_GUIDER 1
 

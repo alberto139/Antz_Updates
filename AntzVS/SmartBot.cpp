@@ -21,10 +21,10 @@ SmartBot::SmartBot(uint32_t robotId):
     curFood(NO_SIGNAL),
     curNest(NO_SIGNAL)
 {
-    robotRole = new LineRole(*this); 
+    //robotRole = new LineRole(*this); 
     //robotRole = new WorkerRole(*this); //------ CHANGE ------
   
-    //robotRole = new GuiderRole(*this);
+    robotRole = new GuiderRole(*this);
     seenRobots = new Dll();
 }
 
@@ -169,14 +169,18 @@ int SmartBot::countNeighbors()
    
 }
 
-Neighbor* SmartBot::getLowestCardNeighbor(int currentTarget)
+Neighbor* SmartBot::getLowestCardNeighbor(int currentTarget, int* direction)
 {
     Neighbor* neighbor = NULL;
     for (int i = 0; i < 6; i++)
         if (neighbors[i] != NULL
             && (currentTarget == TARGET_FOOD && (neighbor == NULL || neighbor->curFood > neighbors[i]->curFood) 
                 || currentTarget == TARGET_NEST && (neighbor == NULL || neighbor->curNest > neighbors[i]->curNest)))
-            neighbor = neighbors[i];
+            {
+                neighbor = neighbors[i];
+                if(direction)
+                    *direction = i;
+            }
     return neighbor;
 }
 

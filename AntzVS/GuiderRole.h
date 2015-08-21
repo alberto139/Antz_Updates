@@ -26,6 +26,9 @@ namespace Antz
         int makeStep();
         int Reposcount = 0;
 
+        int lowFoodDir;
+        int lowNestDir;
+
     private:
         bool receiveSignal(int& roleDecision);
         void makeTurn();

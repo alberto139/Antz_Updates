@@ -15,9 +15,6 @@
 #include "AntzRobot.h"
 #include "Role.h"
 
-#define TARGET_NEST 0
-#define TARGET_FOOD 1
-
 namespace Antz 
 {
     class WorkerRole : public Role

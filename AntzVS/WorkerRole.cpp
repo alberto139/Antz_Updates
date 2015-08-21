@@ -41,8 +41,8 @@ int WorkerRole::makeStep()
 
         if (minSignal != NO_SIGNAL && minSignal <= cur)
         {
-            //display.number(true, minSignal);
-            display.number(true,signalIndex);
+            display.number(true, minSignal);
+            //display.number(true,signalIndex);
             curNumber = minNumber;
             numberTimer = millis();
             makeMovement(); //**************** <---

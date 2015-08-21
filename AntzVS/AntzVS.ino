@@ -27,7 +27,7 @@
 #include "Display.h"
 #include "AntzRobot.h"
 
-#define ID ((uint32_t)8) //change from 32 to 16
+#define ID ((uint32_t)5) //change from 32 to 16
 
 //Display AntzRobot::display;
 
