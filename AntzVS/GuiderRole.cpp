@@ -22,8 +22,13 @@ void GuiderRole::makeTurn()
 int GuiderRole::makeStep()
 {
     if(robot.wipingNeighborsTimer % 3 == 0)
-        //makeTurn();
+    {
+      
 
+        //makeTurn();
+    //robot.minFood = NO_SIGNAL;      // to store the minimum food cardinality
+    //robot.minNest = NO_SIGNAL;      // to store the minimum nest cardinality
+    }
   
 //    Reposcount ++;
 //    if(Reposcount > NEIGHBORS_COLLECTION_TIME_GUID * 5)
@@ -32,8 +37,7 @@ int GuiderRole::makeStep()
 //      makeTurn();
 //      Reposcount = 0;
 //    }
-    robot.minFood = NO_SIGNAL;			// to store the minimum food cardinality
-    robot.minNest = NO_SIGNAL;			// to store the minimum nest cardinality
+    
 
     Display& display = robot.display;
     display.listeningForSignals(); // when red LED is on, the robot listens to the signals from surroundings
@@ -44,10 +48,11 @@ int GuiderRole::makeStep()
  //Commented out to act as stationarly beacon with no role changes **********
 //    if(robot.curFood == NO_SIGNAL) //if the food is seen, only send signal
 //    {
-    while (roleDecision == NO_SWITCH && (wait /*|| robot.minNest == NO_SIGNAL && robot.minFood == NO_SIGNAL*/))
+    //while (roleDecision == NO_SWITCH /*&& (wait || robot.minNest == NO_SIGNAL && robot.minFood == NO_SIGNAL)*/)
         wait = receiveSignal(roleDecision);
 
-
+  Serial.print("wipe Neighbor Timer :");
+  Serial.println(robot.wipingNeighborsTimer);
   robot.wipingNeighborsTimer--;
     //}
 /////////
@@ -150,7 +155,8 @@ bool GuiderRole::receiveSignal(int& roleDecision)
         Neighbor* lowestFoodNeighbor = robot.getLowestCardNeighbor(TARGET_FOOD, &newLowFoodDir);
         Neighbor* lowestNestNeighbor = robot.getLowestCardNeighbor(TARGET_NEST, &newLowNestDir);
 
-        if(lowFoodDir < 0 || (newLowFoodDir + 1) % 6 == lowFoodDir || newLowFoodDir == lowFoodDir || (newLowFoodDir - 1 + 6) % 6 == lowFoodDir)
+        if(lowFoodDir < 0 || (newLowFoodDir + 1) % 6 == lowFoodDir || newLowFoodDir == lowFoodDir || (newLowFoodDir - 1 + 6) % 6 == lowFoodDir 
+           || lowestFoodNeighbor->curFood < robot.minFood)
         {
             robot.minFood = lowestFoodNeighbor->curFood;
             lowFoodDir = newLowFoodDir;
@@ -158,7 +164,8 @@ bool GuiderRole::receiveSignal(int& roleDecision)
         else
             robot.minFood = NO_SIGNAL;
 
-        if(lowNestDir < 0 || (newLowNestDir + 1) % 6 == lowNestDir || newLowNestDir == lowNestDir || (newLowNestDir - 1 + 6) % 6 == lowNestDir)
+        if(lowNestDir < 0 || (newLowNestDir + 1) % 6 == lowNestDir || newLowNestDir == lowNestDir || (newLowNestDir - 1 + 6) % 6 == lowNestDir
+           || lowestNestNeighbor->curNest < robot.minNest)
         {
             lowNestDir = newLowNestDir;
             robot.minNest = lowestNestNeighbor->curNest;
@@ -183,18 +190,20 @@ bool GuiderRole::receiveSignal(int& roleDecision)
                 recalculation = true;
                 Serial.println("Recalculating...");
                 delay(random(1000));
-                robot.wipingNeighborsTimer =  NEIGHBORS_COLLECTION_TIME_GUID; // same as 1st check
+                
             }
             else
                 roleDecision = SWITCH_ROLE;
+                
            
         }
         else
         {
             recalculation = false;
-            robot.wipingNeighborsTimer = NEIGHBORS_COLLECTION_TIME_GUID;
+            //robot.wipingNeighborsTimer = NEIGHBORS_COLLECTION_TIME_GUID;
         }
-        
+
+        robot.wipingNeighborsTimer =  NEIGHBORS_COLLECTION_TIME_GUID; // same as 1st check
         robot.wipeNeighbors();
         //Serial.println("-----------------------------------------");
     }

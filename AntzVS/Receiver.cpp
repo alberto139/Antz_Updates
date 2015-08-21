@@ -97,7 +97,8 @@ bool Receiver::getData(volatile RecvState &recver, uint32_t *value) {
     digitalWrite(POWER, HIGH);
     recver.counter = 0;
   }
-  Serial.println("!! INCORRECT");
+  Serial.println("!! INCORRECT --");
+  Serial.println(recver.bit);
   return false;
 }
 
