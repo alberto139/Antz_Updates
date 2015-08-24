@@ -28,6 +28,7 @@ namespace Antz
         friend class WorkerRole;
         friend class GuiderRole;
         friend class LineRole;
+        friend class CommTestRole;
 
     public:
         SmartBot(uint32_t robotId);

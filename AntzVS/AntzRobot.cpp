@@ -12,7 +12,6 @@
 #include "AntzRobot.h"
 #include "Worker.h"
 #include "Guider.h"
-#include "Transition.h"   //added for role assingment 
 #include "ExpGuider.h"
 #include "Tester.h"
 #include "BayesWorker.h"
@@ -35,12 +34,6 @@ Scanner AntzRobot::scanner;
 /*
  * AntzRobot -- Constructor
  */
-
-  struct Node {
-      Neighbor x;
-      Node *next;
-
-  };
   
 AntzRobot::AntzRobot(uint32_t robotId) {
     identifier = robotId;
