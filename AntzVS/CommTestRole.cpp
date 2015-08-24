@@ -14,10 +14,20 @@ int CommTestRole::makeStep()
 
     int roleDecision = NO_SWITCH;
 
-    receiveSignal(roleDecision);
-    sendSignal();
+   // receiveSignal(roleDecision);
+   
 
+    bool wait = true;  // a flag indicating whether there're more signals to be heard
+    //int roleDecision = NO_SWITCH;
+    
+        while ( wait/* || robot.minNest == NO_SIGNAL && robot.minFood == NO_SIGNAL)*/)
+          wait = receiveSignal(roleDecision);
     robot.wipingNeighborsTimer--;
+  
+    if (!robot.recver.canHearSignal())
+        {
+          sendSignal();
+        }
 
 
     return roleDecision;
@@ -35,11 +45,11 @@ bool CommTestRole::receiveSignal(int& roleDecision)
         if (robot.recver.canHearSignal(idx[i]))
         {
             Serial.print("Receiving from sensor : ");
-            Serial.print(i);
+            Serial.print(idx[i]);
             Serial.print(" ");
             received = true;
             uint32_t receivedSignal; // to store the 32-bit signal 
-            if (robot.recver.recvFrom(i, &receivedSignal))
+            if (robot.recver.recvFrom(idx[i], &receivedSignal))
             {
                 Neighbor* currentN = new Neighbor(receivedSignal);
                 // ---------------------------------- debug printing
@@ -71,7 +81,8 @@ bool CommTestRole::receiveSignal(int& roleDecision)
     if (robot.wipingNeighborsTimer == 0)
     {
         robot.formNeighborhood();
-        robot.countNeighbors();
+        int num = robot.countNeighbors();
+        robot.display.number(true, num);
         robot.wipingNeighborsTimer = NEIGHBORS_COLLECTION_TIME_WORK;
         robot.wipeNeighbors();
     }

@@ -12,6 +12,7 @@
 #include "WorkerRole.h"
 #include "GuiderRole.h"
 #include "LineRole.h"
+#include "CommTestRole.h"
 
 using namespace Antz;
 
@@ -22,9 +23,10 @@ SmartBot::SmartBot(uint32_t robotId):
     curNest(NO_SIGNAL)
 {
     //robotRole = new LineRole(*this); 
-    robotRole = new WorkerRole(*this); //------ CHANGE ------
+    //robotRole = new WorkerRole(*this); //------ CHANGE ------
   
     //robotRole = new GuiderRole(*this);
+    robotRole = new CommTestRole(*this);
     seenRobots = new Dll();
 }
 
