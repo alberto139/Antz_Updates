@@ -11,23 +11,18 @@ CommTestRole::CommTestRole(SmartBot& _robot)
 int CommTestRole::makeStep()
 {
     Display& display = robot.display;
-
-    int roleDecision = NO_SWITCH;
-
-   // receiveSignal(roleDecision);
-   
-
     bool wait = true;  // a flag indicating whether there're more signals to be heard
-    //int roleDecision = NO_SWITCH;
+    int roleDecision = NO_SWITCH;
     
-        while ( wait/* || robot.minNest == NO_SIGNAL && robot.minFood == NO_SIGNAL)*/)
-          wait = receiveSignal(roleDecision);
+    for (int i = 0; i < 6; i++)
+        receivedArray[i] = false;
+
+    while (wait)
+        wait = receiveSignal(roleDecision);
     robot.wipingNeighborsTimer--;
   
     if (!robot.recver.canHearSignal())
-        {
-          sendSignal();
-        }
+        sendSignal();
 
 
     return roleDecision;
@@ -47,33 +42,39 @@ bool CommTestRole::receiveSignal(int& roleDecision)
             Serial.print("Receiving from sensor : ");
             Serial.print(idx[i]);
             Serial.print(" ");
-            received = true;
-            uint32_t receivedSignal; // to store the 32-bit signal 
-            if (robot.recver.recvFrom(idx[i], &receivedSignal))
+            if (receivedArray[idx[i]])
+                Serial.println("ABORTED");
+            else
             {
-                Neighbor* currentN = new Neighbor(receivedSignal);
-                // ---------------------------------- debug printing
-                Serial.print("Neighbor (");
-                Serial.print(robot.isNeighborValid(*currentN));
-                Serial.print("): ");
-                Serial.print(currentN->id);
-                Serial.print("    ");
-                Serial.print(currentN->curFood);
-                Serial.print("    ");
-                Serial.println(currentN->curNest);
-                if (!robot.isNeighborValid(*currentN))
+                received = true;
+                receivedArray[idx[i]] = true;
+                uint32_t receivedSignal; // to store the 32-bit signal 
+                if (robot.recver.recvFrom(idx[i], &receivedSignal))
                 {
-                    Serial.print("curFood: ");
-                    Serial.print(robot.curFood);
-                    Serial.print(", curNest: ");
-                    Serial.println(robot.curNest);
-                }
-                // ---------------------------------- end of debug printing
+                    Neighbor* currentN = new Neighbor(receivedSignal);
+                    // ---------------------------------- debug printing
+                    Serial.print("Neighbor (");
+                    Serial.print(robot.isNeighborValid(*currentN));
+                    Serial.print("): ");
+                    Serial.print(currentN->id);
+                    Serial.print("    ");
+                    Serial.print(currentN->curFood);
+                    Serial.print("    ");
+                    Serial.println(currentN->curNest);
+                    if (!robot.isNeighborValid(*currentN))
+                    {
+                        Serial.print("curFood: ");
+                        Serial.print(robot.curFood);
+                        Serial.print(", curNest: ");
+                        Serial.println(robot.curNest);
+                    }
+                    // ---------------------------------- end of debug printing
 
-                if (robot.isNeighborValid(*currentN))
-                    robot.registerRobotSignal(*currentN, idx[i]);
-                else
-                    delete currentN;
+                    if (robot.isNeighborValid(*currentN))
+                        robot.registerRobotSignal(*currentN, idx[i]);
+                    else
+                        delete currentN;
+                }
             }
         }
     }

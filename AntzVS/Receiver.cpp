@@ -88,7 +88,7 @@ bool Receiver::getData(volatile RecvState &recver, uint32_t *value) {
       Serial.println("CORRECT");
       return true;
     }
-  } while (micros() - start < LEN_PRSV * 5); ///changed+++++
+  } while (micros() - start < LEN_PRSV * 10); ///changed+++++
   EIMSK &= ~(1 << recver.INTn); // disable interrupt for the receiver
 
   if (++recver.counter > RESET_THR) {

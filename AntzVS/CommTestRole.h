@@ -27,6 +27,8 @@ namespace Antz
 
     protected:
         bool receiveSignal(int& roleDecision);
+
+        bool receivedArray[6];
     };
 }
 
