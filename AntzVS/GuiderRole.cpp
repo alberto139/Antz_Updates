@@ -46,6 +46,10 @@ int GuiderRole::makeStep()
  //Commented out to act as stationarly beacon with no role changes **********
 //    if(robot.curFood == NO_SIGNAL) //if the food is seen, only send signal
 //    {
+
+    for (int i = 0; i < 6; i++)
+        receivedArray[i] = false;
+
     while (roleDecision == NO_SWITCH && wait/* || robot.minNest == NO_SIGNAL && robot.minFood == NO_SIGNAL)*/)
         wait = receiveSignal(roleDecision);
     robot.wipingNeighborsTimer--;
@@ -90,7 +94,7 @@ bool GuiderRole::receiveSignal(int& roleDecision)
 
     for (int i = 0; i < 6; i++) // 6 is the number of receiver sensors mounted on the robot
     {
-        if (robot.recver.canHearSignal(i))
+        if (!receivedArray[i] && robot.recver.canHearSignal(i))
         {
             Serial.print("Receiving from sensor : ");
             Serial.print(i);
@@ -99,6 +103,7 @@ bool GuiderRole::receiveSignal(int& roleDecision)
             uint32_t receivedSignal; // to store the 32-bit signal 
             if (robot.recver.recvFrom(i, &receivedSignal))
             {	
+                receivedArray[i] = true;
                 Neighbor* currentN = new Neighbor(receivedSignal);
                 // ---------------------------------- debug printing
                 Serial.print("Neighbor (");
@@ -186,7 +191,7 @@ bool GuiderRole::receiveSignal(int& roleDecision)
                 delay(random(1000));
             }
             else
-                roleDecision = SWITCH_ROLE;
+                roleDecision = NO_SWITCH; //SWITCH_ROLE; - stationary
         }
         else
             recalculation = false;
